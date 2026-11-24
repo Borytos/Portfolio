@@ -6,7 +6,7 @@
   <meta name="description" content="Portfolio horloger interactif de Borys Lucjanek — Étudiant ingénieur en dernière année à l'INP SIGMA Clermont (Spécialité Matériaux Innovants et Durables), spécialisé en sciences des matériaux, mécanique et simulation numérique." />
   <title>Portfolio Horloger — Borys Lucjanek | Ingénieur Matériaux &amp; Mécanique</title>
 
-  <!-- Polices Google Fonts : Inter/Plus Jakarta Sans, Playfair Display & JetBrains Mono -->
+  <!-- Polices Google Fonts : Plus Jakarta Sans, Playfair Display & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -399,7 +399,7 @@
   </main>
 
   <!-- =====================================================================
-       VISIONNEUSE LIGHTBOX PLEIN ÉCRAN POUR LES GALERIES PROJETS (04H – 09H)
+       VISIONNEUSE LIGHTBOX PLEIN ÉCRAN POUR LES GALERIES PROJETS (03H – 09H)
        ===================================================================== -->
   <div
     id="gallery-lightbox"
@@ -480,18 +480,17 @@
       const footerYearEl = document.getElementById('footer-year');
       if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
 
-      // Stockage en mémoire des aperçus locaux (photo portrait & photos de projets)
+      // Stockage en mémoire des aperçus locaux de photos
       const localImageOverrides = {};
 
       // =====================================================================
-      // 1. SCHÉMAS TECHNIQUES SVG BLUEPRINT POUR LES GALERIES (04H À 09H)
+      // 1. SCHÉMAS TECHNIQUES SVG BLUEPRINT POUR LES GALERIES (03H À 09H)
       // =====================================================================
       const BLUEPRINT_SVGS = {
         sigma_1: `
           <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
             <rect width="640" height="360" fill="#070b14"/>
             <g stroke="#1e293b" stroke-width="1"><path d="M0 72H640M0 144H640M0 216H640M0 288H640M128 0V360M256 0V360M384 0V360M512 0V360"/></g>
-            <!-- Silhouette architecturale stylisée INP SIGMA Clermont -->
             <g transform="translate(115, 78)">
               <rect x="0" y="75" width="410" height="125" rx="8" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
               <rect x="28" y="38" width="165" height="162" rx="6" fill="#131e32" stroke="#38bdf8" stroke-width="1.8"/>
@@ -509,14 +508,10 @@
           <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
             <rect width="640" height="360" fill="#070b14"/>
             <g stroke="#1e293b" stroke-width="1"><path d="M0 72H640M0 144H640M0 216H640M0 288H640M128 0V360M256 0V360M384 0V360M512 0V360"/></g>
-            <!-- Zone optimale 40-60 éprouvettes -->
             <rect x="200" y="65" width="90" height="225" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1" stroke-dasharray="4 3"/>
-            <!-- Axes -->
             <line x1="80" y1="290" x2="575" y2="290" stroke="#475569" stroke-width="2"/>
             <line x1="80" y1="65" x2="80" y2="290" stroke="#475569" stroke-width="2"/>
-            <!-- Seuil de précision 1 % -->
             <line x1="80" y1="242" x2="575" y2="242" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="6 4"/>
-            <!-- Courbe Monte-Carlo lissée (150 tirages indépendants) -->
             <polyline points="110,145 135,178 160,188 185,196 225,222 255,220 290,228 360,232 430,247 545,250" fill="none" stroke="#38bdf8" stroke-width="2.6"/>
             <g fill="#d4af37">
               <circle cx="110" cy="145" r="4.5"/><circle cx="135" cy="178" r="4.5"/><circle cx="160" cy="188" r="4.5"/>
@@ -532,11 +527,9 @@
           <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
             <rect width="640" height="360" fill="#070b14"/>
             <g stroke="#1e293b" stroke-width="1"><path d="M0 90H640M0 180H640M0 270H640M160 0V360M320 0V360M480 0V360"/></g>
-            <!-- Bande optimale d dans [20, 40] MPa -->
             <rect x="175" y="65" width="115" height="225" fill="rgba(16,185,129,0.14)" stroke="#10b981" stroke-width="1.2"/>
             <line x1="85" y1="290" x2="565" y2="290" stroke="#475569" stroke-width="2"/>
             <line x1="85" y1="65" x2="85" y2="290" stroke="#475569" stroke-width="2"/>
-            <!-- Courbe d'erreur relative sur sigma = 1/b -->
             <polyline points="118,80 132,175 175,240 232,258 290,261 345,252 400,249 485,239 545,250" fill="none" stroke="#ef4444" stroke-width="2.6"/>
             <g fill="#f3e5ab">
               <circle cx="132" cy="175" r="4"/><circle cx="175" cy="240" r="4"/><circle cx="232" cy="258" r="4.5"/>
@@ -550,7 +543,6 @@
         safran_3: `
           <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
             <rect width="640" height="360" fill="#070b14"/>
-            <!-- Panneau gauche : Régression Probit -->
             <rect x="45" y="65" width="265" height="225" rx="10" fill="#0e1625" stroke="#20304a"/>
             <line x1="65" y1="180" x2="290" y2="180" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4 3"/>
             <line x1="178" y1="80" x2="178" y2="275" stroke="#10b981" stroke-width="1.4" stroke-dasharray="3 3"/>
@@ -560,7 +552,6 @@
               <circle cx="176" cy="182" r="4"/><circle cx="205" cy="158" r="4"/><circle cx="235" cy="132" r="4"/><circle cx="268" cy="102" r="4"/>
             </g>
             <text x="62" y="88" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">RÉGRESSION ML PROBIT &amp; SIGMOÏDE</text>
-            <!-- Panneau droit : Synthèse NBS Handbook 91 & Finney -->
             <rect x="330" y="65" width="265" height="225" rx="10" fill="#0e1625" stroke="#d4af37" stroke-width="1.4"/>
             <text x="348" y="92" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700">VALIDATION STATISTIQUE PYTHON</text>
             <text x="348" y="118" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="9.5">• NBS Handbook 91 (Y = -4,62 + 6,66x)</text>
@@ -761,38 +752,38 @@
           title: 'Galerie du dossier • Safran Transmission Systems',
           items: [
             {
-              src: 'assets/safran_1.jpg',
+              src: 'assets/safran_1.png',
               caption: 'Sensibilité de l’estimation Probit (S_50% = 500,79 MPa) au nombre d’éprouvettes — Simulation Monte-Carlo (150 tirages)',
               svgKey: 'safran_1'
             },
             {
-              src: 'assets/safran_2.jpg',
+              src: 'assets/safran_2.png',
               caption: 'Impact du pas de contrainte d sur la médiane S_50% et la dispersion σ = 1/b — Fenêtre optimale d ∈ [20, 40] MPa (ISO 12107)',
               svgKey: 'safran_2'
             },
             {
-              src: 'assets/safran_3.jpg',
+              src: 'assets/safran_3.png',
               caption: 'Régression Maximum de Vraisemblance Probit, courbe sigmoïde et validation sur NBS Handbook 91 & Finney 1952',
               svgKey: 'safran_3'
             }
           ]
         },
         5: {
-          title: 'Galerie du dossier • ICIMB Łukasiewicz (Varsovie)',
+          title: 'Galerie du dossier • Stage R&D ICIMB Łukasiewicz',
           items: [
             {
               src: 'assets/icimb_1.jpg',
-              caption: 'Conception de céramiques de stockage thermique à partir de matières premières issues de déchets',
+              caption: 'Éprouvettes et géométries céramiques de stockage thermique élaborées à partir de matières premières issues de déchets',
               svgKey: 'icimb_1'
             },
             {
               src: 'assets/icimb_2.jpg',
-              caption: 'Caractérisation physico-chimique et thermique : BET, DRX, ATG-ATD et DSC',
+              caption: 'Analyses physico-chimiques et thermiques en laboratoire : BET, DRX, ATG-ATD et DSC',
               svgKey: 'icimb_2'
             },
             {
               src: 'assets/icimb_3.jpg',
-              caption: 'Analyses microstructurales (MEB, STEM), essais Mouton de Charpy et certification clients',
+              caption: 'Microscopie électronique (MEB / STEM), essais de résilience au Mouton de Charpy et certification clients',
               svgKey: 'icimb_3'
             }
           ]
@@ -802,17 +793,17 @@
           items: [
             {
               src: 'assets/phimeca_1.jpg',
-              caption: 'Architecture prédictive Machine Learning (CNN, SVR, XGBoost) pour les propriétés matériaux',
+              caption: 'Architecture des modèles prédictifs (CNN, SVR, XGBoost) appliqués aux propriétés des matériaux',
               svgKey: 'phimeca_1'
             },
             {
               src: 'assets/phimeca_2.jpg',
-              caption: 'Optimisation bayésienne et génétique pour le design inverse de matériaux cibles',
+              caption: 'Courbes de convergence de l’optimisation bayésienne et génétique vers les propriétés cibles',
               svgKey: 'phimeca_2'
             },
             {
               src: 'assets/phimeca_3.jpg',
-              caption: 'Pipeline numérique Python développé en partenariat avec PHIMECA',
+              caption: 'Pipeline Python de design inverse et identification des formulations matériaux optimales',
               svgKey: 'phimeca_3'
             }
           ]
@@ -821,17 +812,17 @@
           title: 'Galerie du dossier • Stage Ouvrier MECALOC TP',
           items: [
             {
-              src: 'assets/mecaloc_1.jpg',
+              src: 'assets/mecaloc_1.png',
               caption: 'Maintenance mécanique d’engins TP : marteaux-piqueurs, plaques vibrantes et pilonneuses',
               svgKey: 'mecaloc_1'
             },
             {
-              src: 'assets/mecaloc_2.jpg',
+              src: 'assets/mecaloc_2.png',
               caption: 'Diagnostic électrique et remise en service de jeux de feux tricolores et batteries',
               svgKey: 'mecaloc_2'
             },
             {
-              src: 'assets/mecaloc_3.jpg',
+              src: 'assets/mecaloc_3.png',
               caption: 'Travaux de peinture, finition et contrôle qualité avant remise en location',
               svgKey: 'mecaloc_3'
             }
@@ -841,7 +832,7 @@
           title: 'Galerie du dossier • Équipe de Volley-ball SIGMA Clermont',
           items: [
             {
-              src: 'assets/volley_1.jpg',
+              src: 'assets/volley_1.png',
               caption: 'Coach et capitaine de l’équipe de volley-ball de l’INP SIGMA Clermont',
               svgKey: 'volley_1'
             },
@@ -853,103 +844,43 @@
           ]
         },
         9: {
-          title: 'Galerie du dossier • FizZteam & Remise des Diplômes',
+          title: 'Galerie associative • FizZteam & Remise des Diplômes',
           items: [
             {
               src: 'assets/fizzteam.jpg',
-              caption: 'Membre actif du foyer de l’école — FizZteam (INP SIGMA Clermont)',
+              caption: 'Membre actif du foyer de l’école FizZteam — Animation étudiante à SIGMA Clermont',
               svgKey: 'asso_1'
             },
             {
               src: 'assets/rdd.jpg',
-              caption: 'Responsable Partenariats de l’association Remise des Diplômes (RDD)',
+              caption: 'Responsable Partenariats — Association Remise des Diplômes (RDD) SIGMA Clermont',
               svgKey: 'asso_2'
             }
           ]
         }
       };
 
-      // Mémorise l'index de vignette actif par rubrique
       const galleryActiveSlide = { 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
 
       // =====================================================================
-      // 3. COMPOSANTS VISUELS : BADGE LOGO & MODULES DE GALERIE
+      // 3. HELPERS D'AFFICHAGE DES LOGOS & GALERIES INTERACTIVES
       // =====================================================================
-      function renderLogoBadge(src, alt, fallbackMonogram, sizeClasses = 'w-12 h-12') {
-        const resolvedSrc = localImageOverrides[src] || src;
+      function renderLogoBadge(logoSrc, altText, fallbackCode, sizeClass = 'w-14 h-14') {
+        const resolvedLogo = localImageOverrides[logoSrc] || logoSrc;
         return `
           <div
-            class="${sizeClasses} rounded-xl bg-white/95 border border-horology-gold/50 p-1.5 flex items-center justify-center shrink-0 shadow-sm overflow-hidden"
-            title="${alt} (${src})"
+            title="Emplacement logo : ${logoSrc}"
+            class="${sizeClass} rounded-xl bg-white/95 border border-horology-gold/50 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden"
           >
             <img
-              src="${resolvedSrc}"
-              alt="${alt}"
+              src="${resolvedLogo}"
+              alt="${altText}"
               class="w-full h-full object-contain"
-              onerror="this.style.display='none'; this.parentElement.classList.remove('bg-white/95'); this.parentElement.classList.add('bg-horology-card'); this.nextElementSibling.classList.remove('hidden');"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
             />
-            <span class="hidden font-mono font-extrabold text-[10px] tracking-tight text-horology-goldLight text-center leading-tight">
-              ${fallbackMonogram}
+            <span class="hidden font-mono text-[10px] font-bold text-slate-900 tracking-tight text-center leading-tight">
+              ${fallbackCode}
             </span>
-          </div>
-        `;
-      }
-
-      function renderSinglePhotoCard(stepNumber, itemIndex, labelTitle) {
-        const gallery = GALLERIES_BY_STEP[stepNumber];
-        if (!gallery || !gallery.items[itemIndex]) return '';
-        const item = gallery.items[itemIndex];
-        const resolvedSrc = localImageOverrides[item.src] || item.src;
-
-        return `
-          <div class="mt-3 pt-3 border-t border-horology-border/70 space-y-2">
-            <div class="flex flex-wrap items-center justify-between gap-1.5">
-              <span class="font-mono text-[10px] uppercase tracking-wider text-horology-gold font-semibold">
-                ${labelTitle}
-              </span>
-              <span class="font-mono text-[10px] text-horology-steelMuted">
-                <code class="text-horology-goldLight">${item.src}</code>
-              </span>
-            </div>
-
-            <div class="relative rounded-xl overflow-hidden border border-horology-border bg-horology-bg aspect-[16/9]">
-              <img
-                src="${resolvedSrc}"
-                alt="${item.caption}"
-                class="w-full h-full object-cover"
-                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-              />
-              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
-
-              <div class="absolute top-2 right-2 flex items-center gap-1.5">
-                <label
-                  class="cursor-pointer px-2 py-1 rounded-lg bg-horology-bg/90 hover:bg-horology-card border border-horology-gold/40 text-[10px] font-mono text-horology-goldLight transition-colors backdrop-blur-sm"
-                  title="Tester une photo depuis votre ordinateur"
-                >
-                  <span>Aperçu local</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    data-target-src="${item.src}"
-                    class="gallery-local-input hidden"
-                  />
-                </label>
-
-                <button
-                  type="button"
-                  data-lightbox-step="${stepNumber}"
-                  data-lightbox-index="${itemIndex}"
-                  class="gallery-open-lightbox-btn px-2 py-1 rounded-lg bg-horology-gold text-horology-bg hover:bg-horology-goldLight text-[10px] font-mono font-bold transition-colors shadow"
-                  title="Agrandir en plein écran"
-                >
-                  Agrandir ⤢
-                </button>
-              </div>
-
-              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent px-3 py-2">
-                <p class="text-[11px] text-slate-100 leading-snug">${item.caption}</p>
-              </div>
-            </div>
           </div>
         `;
       }
@@ -957,112 +888,138 @@
       function renderGalleryModule(stepNumber) {
         const gallery = GALLERIES_BY_STEP[stepNumber];
         if (!gallery) return '';
+        const activeIdx = galleryActiveSlide[stepNumber] || 0;
+        const activeItem = gallery.items[activeIdx];
+        const resolvedMainSrc = localImageOverrides[activeItem.src] || activeItem.src;
+        const hasMultiple = gallery.items.length > 1;
 
-        const totalItems = gallery.items.length;
-        const activeIndex = Math.min(galleryActiveSlide[stepNumber] || 0, totalItems - 1);
-        const activeItem = gallery.items[activeIndex];
-        const resolvedActiveSrc = localImageOverrides[activeItem.src] || activeItem.src;
-
-        const gridColsClass = totalItems === 2 ? 'grid-cols-2' : 'grid-cols-3';
-
-        const thumbnailsHtml = totalItems > 1
-          ? `<div class="grid ${gridColsClass} gap-2.5">` +
-            gallery.items.map((item, idx) => {
-              const isSelected = idx === activeIndex;
-              const thumbSrc = localImageOverrides[item.src] || item.src;
-              return `
-                <button
-                  type="button"
-                  data-gallery-step="${stepNumber}"
-                  data-gallery-index="${idx}"
-                  class="gallery-thumb-btn relative rounded-xl overflow-hidden aspect-video border-2 transition-all text-left group ${
-                    isSelected
-                      ? 'border-horology-gold shadow-gold-glow scale-[1.01]'
-                      : 'border-horology-border/80 opacity-80 hover:opacity-100 hover:border-horology-gold/50'
-                  }"
-                  title="Afficher le visuel ${idx + 1}"
-                >
-                  <img
-                    src="${thumbSrc}"
-                    alt="${item.caption}"
-                    class="w-full h-full object-cover"
-                    onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-                  />
-                  <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
-                  <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-horology-bg/85 text-[9px] font-mono text-horology-goldLight">
-                    0${idx + 1}
-                  </span>
-                </button>
-              `;
-            }).join('') +
-            `</div>`
+        const thumbsHtml = hasMultiple
+          ? `
+            <div class="grid grid-cols-${gallery.items.length} gap-2.5">
+              ${gallery.items.map((item, idx) => {
+                const isSelected = idx === activeIdx;
+                const thumbSrc = localImageOverrides[item.src] || item.src;
+                return `
+                  <button
+                    type="button"
+                    data-gallery-step="${stepNumber}"
+                    data-gallery-index="${idx}"
+                    class="gallery-thumb-btn group relative aspect-video rounded-xl overflow-hidden border-2 transition-all text-left ${
+                      isSelected
+                        ? 'border-horology-gold shadow-gold-glow'
+                        : 'border-horology-border hover:border-horology-gold/50 opacity-75 hover:opacity-100'
+                    }"
+                  >
+                    <img
+                      src="${thumbSrc}"
+                      alt="${item.caption}"
+                      class="w-full h-full object-cover"
+                      onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                    />
+                    <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
+                    <span class="absolute bottom-1 left-1.5 px-1.5 py-0.5 rounded bg-horology-bg/85 font-mono text-[9px] text-horology-goldLight">
+                      0${idx + 1}
+                    </span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          `
           : '';
 
         return `
-          <div class="mt-5 pt-4 border-t border-horology-border/80 space-y-3">
+          <div class="mt-4 p-3.5 sm:p-4 rounded-2xl bg-horology-bg/90 border border-horology-border space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="font-mono text-[11px] uppercase tracking-wider text-horology-gold font-semibold">
                 ${gallery.title}
               </span>
-              <span class="font-mono text-[11px] text-horology-steelMuted">
-                Fichier : <code class="text-horology-goldLight">${activeItem.src}</code>
-              </span>
-            </div>
-
-            <!-- Cadre visuel principal -->
-            <div class="relative rounded-2xl overflow-hidden border border-horology-border bg-horology-bg aspect-[16/9] group">
-              <img
-                src="${resolvedActiveSrc}"
-                alt="${activeItem.caption}"
-                class="w-full h-full object-cover"
-                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-              />
-              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[activeItem.svgKey]}</div>
-
-              <!-- Barre d'outils flottante (Agrandir + Aperçu photo locale) -->
-              <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-                <label
-                  class="cursor-pointer px-2.5 py-1.5 rounded-xl bg-horology-bg/90 hover:bg-horology-card border border-horology-gold/40 text-[11px] font-mono text-horology-goldLight transition-colors backdrop-blur-sm"
-                  title="Tester une photo depuis votre ordinateur"
-                >
-                  <span>Aperçu photo locale</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    data-target-src="${activeItem.src}"
-                    class="gallery-local-input hidden"
-                  />
+              <div class="flex items-center gap-2">
+                <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-horology-card hover:bg-horology-border border border-horology-border font-mono text-[10px] text-horology-steel hover:text-white transition-colors">
+                  Aperçu photo locale
+                  <input type="file" accept="image/*" class="hidden gallery-local-input" data-target-src="${activeItem.src}" />
                 </label>
-
                 <button
                   type="button"
                   data-lightbox-step="${stepNumber}"
-                  data-lightbox-index="${activeIndex}"
-                  class="gallery-open-lightbox-btn px-2.5 py-1.5 rounded-xl bg-horology-gold text-horology-bg hover:bg-horology-goldLight text-[11px] font-mono font-bold transition-colors shadow"
-                  title="Agrandir en plein écran"
+                  data-lightbox-index="${activeIdx}"
+                  class="gallery-open-lightbox-btn px-2.5 py-1 rounded-lg bg-horology-gold/15 hover:bg-horology-gold border border-horology-gold/50 font-mono text-[10px] font-semibold text-horology-goldLight hover:text-horology-bg transition-colors"
                 >
                   Agrandir ⤢
                 </button>
               </div>
+            </div>
 
-              <!-- Bandeau légende bas -->
-              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent px-3.5 py-2.5">
-                <p class="text-xs text-slate-100 leading-snug">${activeItem.caption}</p>
+            <!-- Visuel principal -->
+            <div
+              data-lightbox-step="${stepNumber}"
+              data-lightbox-index="${activeIdx}"
+              class="gallery-open-lightbox-btn cursor-pointer relative w-full aspect-video rounded-xl overflow-hidden border border-horology-border/80 bg-horology-surface group"
+            >
+              <img
+                src="${resolvedMainSrc}"
+                alt="${activeItem.caption}"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+              />
+              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[activeItem.svgKey]}</div>
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3 pt-8">
+                <p class="text-[11px] sm:text-xs text-slate-100 leading-snug">${activeItem.caption}</p>
               </div>
             </div>
 
-            <!-- Vignettes de sélection (si plusieurs photos) -->
-            ${thumbnailsHtml}
+            ${thumbsHtml}
+          </div>
+        `;
+      }
+
+      function renderSinglePhotoCard(stepNumber, itemIndex, badgeText) {
+        const gallery = GALLERIES_BY_STEP[stepNumber];
+        if (!gallery || !gallery.items[itemIndex]) return '';
+        const item = gallery.items[itemIndex];
+        const resolvedSrc = localImageOverrides[item.src] || item.src;
+
+        return `
+          <div class="mt-3 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-mono text-[10px] text-horology-steelMuted">${badgeText}</span>
+              <div class="flex items-center gap-1.5">
+                <label class="cursor-pointer px-2 py-0.5 rounded bg-horology-card hover:bg-horology-border border border-horology-border font-mono text-[9.5px] text-horology-steel hover:text-white transition-colors">
+                  Aperçu local
+                  <input type="file" accept="image/*" class="hidden gallery-local-input" data-target-src="${item.src}" />
+                </label>
+                <button
+                  type="button"
+                  data-lightbox-step="${stepNumber}"
+                  data-lightbox-index="${itemIndex}"
+                  class="gallery-open-lightbox-btn px-2 py-0.5 rounded bg-horology-gold/15 hover:bg-horology-gold border border-horology-gold/50 font-mono text-[9.5px] font-semibold text-horology-goldLight hover:text-horology-bg transition-colors"
+                >
+                  Agrandir ⤢
+                </button>
+              </div>
+            </div>
+            <div
+              data-lightbox-step="${stepNumber}"
+              data-lightbox-index="${itemIndex}"
+              class="gallery-open-lightbox-btn cursor-pointer relative w-full aspect-video rounded-xl overflow-hidden border border-horology-border bg-horology-surface group"
+            >
+              <img
+                src="${resolvedSrc}"
+                alt="${item.caption}"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+              />
+              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
+            </div>
           </div>
         `;
       }
 
       // =====================================================================
-      // 4. BASE DE DONNÉES DES 12 POSITIONS DU CADRAN (00H À 11H, RETOUR 12H=00H)
+      // 4. DÉFINITION COMPLÈTE DES 11 RUBRIQUES (00H À 10H) + CONTACT (11H)
       // =====================================================================
       const PORTFOLIO_STEPS = [
         // -------------------------------------------------------------------
-        // 00H (INDEX 12) — PRÉSENTATION & PROFIL (GRAND PORTRAIT)
+        // 00H — PRÉSENTATION PERSONNELLE (GRAND PORTRAIT SANS BOUTON TEST)
         // -------------------------------------------------------------------
         {
           step: 0,
@@ -1072,7 +1029,7 @@
           title: 'Borys Lucjanek',
           subtitle: 'Étudiant en dernière année d’école d’ingénieur à l’INP SIGMA Clermont — Spécialité Matériaux Innovants et Durables (MID)',
           render: () => {
-            const portraitSrc = localImageOverrides['assets/photo.jpg'] || 'assets/photo.jpg';
+            const portraitSrc = localImageOverrides['assets/photo.png'] || 'assets/photo.png';
             return `
               <div class="space-y-6">
                 <div class="flex flex-col sm:flex-row items-center sm:items-stretch gap-6">
@@ -1096,76 +1053,61 @@
                           <svg class="w-16 h-12 text-horology-steelMuted/50 mb-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
                           </svg>
-                          <span class="font-mono text-[10px] text-horology-goldLight">assets/photo.jpg</span>
+                          <span class="font-mono text-[10px] text-horology-goldLight">assets/photo.png</span>
                         </div>
                       </div>
                     </div>
-
-                    <!-- Bouton discret pour tester une photo locale -->
-                    <label
-                      class="mt-2.5 cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-horology-card hover:border-horology-gold border border-horology-border text-[11px] font-mono text-horology-goldLight transition-colors"
-                      title="Prévisualiser une photo depuis votre ordinateur"
-                    >
-                      <svg class="w-3.5 h-3.5 text-horology-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      <span>Tester une photo</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        data-target-src="assets/photo.jpg"
-                        class="gallery-local-input hidden"
-                      />
-                    </label>
                   </div>
 
                   <!-- Informations d'identité & profil ingénieur -->
-                  <div class="flex-1 flex flex-col justify-between text-center sm:text-left space-y-4">
-                    <div class="space-y-2.5">
-                      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-horology-gold/15 border border-horology-gold/40 text-horology-goldLight font-mono text-xs">
-                        <span class="w-2 h-2 rounded-full bg-horology-gold animate-pulse"></span>
-                        <span>22 ans • Clermont-Ferrand</span>
+                  <div class="flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="px-3 py-1 rounded-full bg-horology-gold/15 border border-horology-gold/40 font-mono text-xs font-semibold text-horology-gold">
+                          22 ans
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-horology-card border border-horology-border font-mono text-xs text-horology-steel">
+                          Clermont-Ferrand, France
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-sky-500/15 border border-sky-400/30 font-mono text-xs text-sky-300">
+                          FR • PL • EN (C1)
+                        </span>
                       </div>
 
                       <p class="text-sm sm:text-base text-slate-200 leading-relaxed">
-                        Étudiant en <strong class="text-white">dernière année d’école d’ingénieur</strong> à l’<strong class="text-horology-goldLight">INP SIGMA Clermont</strong> (Spécialité <strong class="text-white">Matériaux Innovants et Durables</strong>), je développe une double expertise en <strong class="text-horology-goldLight">sciences des matériaux</strong> et en <strong class="text-white">ingénierie mécanique</strong>.
-                      </p>
-
-                      <p class="text-xs sm:text-sm text-horology-steelMuted leading-relaxed">
-                        Profil trilingue (<strong class="text-white">Français</strong>, <strong class="text-white">Polonais</strong>, <strong class="text-white">Anglais C1</strong>) combinant caractérisation physico-chimique des matériaux, mécanique des structures, fiabilité en fatigue, simulation CAO/MEF et apprentissage automatique.
+                        Formé en classes préparatoires <strong class="text-white">MPSI / MP*</strong> à Paris puis en cycle ingénieur mécanique à l’<strong class="text-white">INP SIGMA Clermont</strong> (spécialité <strong class="text-horology-goldLight">Matériaux Innovants et Durables</strong>), j’associe la <strong class="text-white">caractérisation expérimentale des matériaux</strong>, la <strong class="text-white">mécanique des structures</strong> et la <strong class="text-white">modélisation numérique / data science</strong>.
                       </p>
                     </div>
 
                     <!-- Coordonnées directes -->
-                    <div class="grid grid-cols-1 gap-2 text-xs font-mono">
-                      <a href="tel:+33664088176" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-white transition-colors">
-                        <span class="text-horology-gold">Tél :</span>
-                        <span>+33 6 64 08 81 76</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-mono">
+                      <a href="tel:+33664088176" class="p-3 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-colors flex items-center gap-2.5 text-slate-200">
+                        <span class="text-horology-gold font-bold">TEL</span>
+                        <span class="truncate">+33 6 64 08 81 76</span>
                       </a>
-                      <a href="mailto:borys.lucjanek@sigma-clermont.fr" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-white transition-colors truncate">
-                        <span class="text-horology-gold">Mail :</span>
+                      <a href="https://www.linkedin.com/in/borys-lucjanek-479b46227/" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-sky-400 transition-colors flex items-center gap-2.5 text-sky-300">
+                        <span class="font-bold">IN</span>
+                        <span class="truncate">LinkedIn Borys Lucjanek ↗</span>
+                      </a>
+                      <a href="mailto:borys.lucjanek@sigma-clermont.fr" class="sm:col-span-2 p-3 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-colors flex items-center gap-2.5 text-slate-200">
+                        <span class="text-horology-gold font-bold">MAIL</span>
                         <span class="truncate">borys.lucjanek@sigma-clermont.fr</span>
-                      </a>
-                      <a href="https://www.linkedin.com/in/borys-lucjanek-479b46227/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-sky-400 transition-colors">
-                        <span class="text-horology-gold">LinkedIn :</span>
-                        <span>linkedin.com/in/borys-lucjanek-479b46227 ↗</span>
                       </a>
                     </div>
                   </div>
                 </div>
 
-                <!-- Bouton d'action pour démarrer la visite à 01h -->
-                <div class="pt-2 border-t border-horology-border/70 flex flex-wrap items-center justify-between gap-3">
-                  <p class="text-xs font-mono text-horology-steelMuted">
-                    Faites tourner l’aiguille heure par heure pour parcourir mes 11 rubriques.
+                <!-- Guide d'utilisation du cadran -->
+                <div class="p-3.5 rounded-2xl bg-horology-card/70 border border-horology-border flex flex-wrap items-center justify-between gap-3">
+                  <p class="text-xs text-horology-steel">
+                    Appuyez sur <strong class="text-horology-goldLight">Démarrer · 01h →</strong> pour faire tourner l’aiguille et explorer les <strong class="text-white">11 rubriques</strong>.
                   </p>
                   <button
                     type="button"
                     data-goto-step="1"
-                    class="step-jump-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-horology-gold to-amber-500 hover:from-horology-goldLight hover:to-horology-gold text-horology-bg font-bold text-xs sm:text-sm shadow-gold-glow transition-all active:scale-95"
+                    class="step-jump-btn px-3.5 py-2 rounded-xl bg-horology-gold text-horology-bg font-bold text-xs hover:bg-horology-goldLight transition-colors"
                   >
-                    <span>Démarrer la visite · 01h →</span>
+                    Passer à 01h →
                   </button>
                 </div>
               </div>
@@ -1174,126 +1116,148 @@
         },
 
         // -------------------------------------------------------------------
-        // 01H — COMPÉTENCES TECHNIQUES & LOGICIELS
+        // 01H — COMPÉTENCES TECHNIQUES, SIMULATION & CARACTÉRISATION
         // -------------------------------------------------------------------
         {
           step: 1,
           hourLabel: '01H',
           shortTitle: 'COMPÉTENCES',
           kicker: 'Rubrique 01 / 11 • 01h',
-          title: 'Compétences Techniques & Outils Numériques',
-          subtitle: 'Science des matériaux, mécanique des structures, simulation CAO/MEF et science des données',
+          title: 'Compétences Techniques & Outils Ingénieur',
+          subtitle: 'Science des matériaux, caractérisation physico-chimique, simulation mécanique et programmation scientifique',
           render: () => `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <!-- Matériaux & Caractérisation -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-gold/40 space-y-2">
-                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-horology-gold/15 text-horology-goldLight font-mono text-[11px] font-bold">
-                  Matériaux &amp; Caractérisation
-                </span>
-                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
-                  Matériaux composites, céramiques techniques, éco-conception et valorisation de matières issues de déchets, caractérisation physico-chimique (<span class="font-mono text-white">BET, DRX, ATG-ATD, MEB, STEM, DSC, Charpy</span>).
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <!-- Bloc 1 : Matériaux & Mécanique -->
+              <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-gold/40">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-horology-gold font-bold">Matériaux &amp; Mécanique</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2">Structures &amp; Matériaux Durables</h3>
+                <div class="flex flex-wrap gap-1.5 text-[11px]">
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Matériaux composites</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Céramiques &amp; stockage thermique</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Résistance des matériaux (RDM)</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Viscoélasticité &amp; plasticité</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Vibrations de structures</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Matériaux actifs</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Fatigue probabiliste (ISO 12107)</span>
+                </div>
+              </div>
+
+              <!-- Bloc 2 : Caractérisation expérimentale -->
+              <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-sky-400 font-bold">Laboratoire &amp; Essais</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2">Caractérisation &amp; Certification</h3>
+                <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">BET</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">DRX</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">ATG-ATD</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">MEB &amp; STEM</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">DSC</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-sky-300 border border-horology-border">Mouton de Charpy</span>
+                </div>
+                <p class="text-xs text-horology-steelMuted mt-2.5 leading-relaxed">
+                  Essais mécaniques, analyses microstructurales et thermiques, protocoles normatifs et certification de matériaux.
                 </p>
               </div>
 
-              <!-- Mécanique & Fiabilité -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-sky-400/35 space-y-2">
-                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-sky-500/15 text-sky-300 font-mono text-[11px] font-bold">
-                  Mécanique &amp; Fiabilité
-                </span>
-                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
-                  Résistance des matériaux (RDM), viscoélasticité linéaire et plasticité, vibrations de structures, modélisation non-linéaire, fatigue à durée de vie infinie (<span class="font-mono text-white">ISO 12107</span>) et incertitudes probabilistes.
-                </p>
+              <!-- Bloc 3 : CAO & Simulation -->
+              <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-amber-300 font-bold">Ingénierie Numérique</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2">CAO &amp; Calcul de Structures</h3>
+                <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-horology-goldLight border border-horology-border">CATIA</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-horology-goldLight border border-horology-border">ANSYS (MEF)</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-horology-goldLight border border-horology-border">ADAMS</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Modélisation non-linéaire</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Pack Office</span>
+                </div>
               </div>
 
-              <!-- CAO & Simulation Numérique -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2">
-                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-horology-card text-amber-300 font-mono text-[11px] font-bold">
-                  CFAO &amp; Éléments Finis
-                </span>
-                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
-                  Conception mécanique sous <strong class="text-white">CATIA</strong>, calcul de structures par méthode des éléments finis (MEF) sous <strong class="text-white">ANSYS</strong>, dynamique multicorps sous <strong class="text-white">ADAMS</strong> et suite <strong class="text-white">Pack Office</strong>.
-                </p>
-              </div>
-
-              <!-- Programmation & IA -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-emerald-400/35 space-y-2">
-                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300 font-mono text-[11px] font-bold">
-                  Programmation &amp; Machine Learning
-                </span>
-                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
-                  Développement en <strong class="text-white">Python</strong>, <strong class="text-white">OCaml</strong> et <strong class="text-white">SQL</strong> ; modèles prédictifs (<span class="font-mono text-white">CNN, SVR, XGBoost</span>), simulation Monte-Carlo et optimisation bayésienne / génétique.
-                </p>
+              <!-- Bloc 4 : Programmation & Data Science -->
+              <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Programmation &amp; IA</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2">Calcul Scientifique &amp; Machine Learning</h3>
+                <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-emerald-300 border border-horology-border">Python</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-emerald-300 border border-horology-border">MATLAB</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-emerald-300 border border-horology-border">OCaml</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-emerald-300 border border-horology-border">SQL</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">CNN • SVR • XGBoost</span>
+                  <span class="px-2.5 py-1 rounded-lg bg-horology-card text-slate-200 border border-horology-border">Optimisation bayésienne &amp; génétique</span>
+                </div>
               </div>
             </div>
           `
         },
 
         // -------------------------------------------------------------------
-        // 02H — LANGUES & SAVOIR-ÊTRE
+        // 02H — LANGUES, QUALITÉS & CENTRES D'INTÉRÊT
         // -------------------------------------------------------------------
         {
           step: 2,
           hourLabel: '02H',
           shortTitle: 'LANGUES & ATOUTS',
           kicker: 'Rubrique 02 / 11 • 02h',
-          title: 'Langues & Savoir-Être',
-          subtitle: 'Profil trilingue international et qualités humaines développées en environnement académique et industriel',
+          title: 'Langues, Qualités & Centres d’Intérêt',
+          subtitle: 'Profil international trilingue, savoir-être d’équipe et passions personnelles',
           render: () => `
             <div class="space-y-4">
-              <!-- Maîtrise linguistique -->
-              <div>
-                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold mb-2.5">
-                  Compétences linguistiques
-                </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-gold/50 text-center">
-                    <p class="text-sm font-bold text-white">Français</p>
-                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Langue maternelle</p>
+              <!-- Langues -->
+              <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-gold/40">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-horology-gold font-bold">Communication Internationale</span>
+                <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-3">Langues maîtrisées</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                  <div class="p-3 rounded-xl bg-horology-card border border-horology-border">
+                    <p class="font-bold text-white">Français</p>
+                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Maternelle</p>
                   </div>
-                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-gold/50 text-center">
-                    <p class="text-sm font-bold text-white">Polonais</p>
-                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Langue maternelle</p>
+                  <div class="p-3 rounded-xl bg-horology-card border border-horology-border">
+                    <p class="font-bold text-white">Polonais</p>
+                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Maternelle</p>
                   </div>
-                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-sky-400/40 text-center">
-                    <p class="text-sm font-bold text-white">Anglais</p>
-                    <p class="font-mono text-[11px] text-sky-300 mt-0.5">Niveau C1 (Courant)</p>
+                  <div class="p-3 rounded-xl bg-horology-card border border-horology-border">
+                    <p class="font-bold text-white">Anglais</p>
+                    <p class="font-mono text-[11px] text-sky-300 mt-0.5">Niveau C1</p>
                   </div>
-                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-border text-center">
-                    <p class="text-sm font-bold text-white">Espagnol</p>
-                    <p class="font-mono text-[11px] text-horology-steelMuted mt-0.5">Notions (A1 – A2)</p>
+                  <div class="p-3 rounded-xl bg-horology-card border border-horology-border">
+                    <p class="font-bold text-white">Espagnol</p>
+                    <p class="font-mono text-[11px] text-horology-steelMuted mt-0.5">Niveau A2</p>
                   </div>
                 </div>
               </div>
 
-              <!-- Savoir-être & Qualités -->
-              <div>
-                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold mb-2.5">
-                  Qualités personnelles &amp; Dynamique collective
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
-                    <p class="text-sm font-bold text-white">Capacité d’analyse &amp; d’adaptation</p>
-                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
-                      Approche rigoureuse des problèmes complexes, confrontation théorie / expérimentation et intégration rapide en milieu international.
-                    </p>
-                  </div>
-                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
-                    <p class="text-sm font-bold text-white">Créativité &amp; Innovation</p>
-                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
-                      Recherche de solutions techniques originales en formulation de matériaux durables et en conception mécanique.
-                    </p>
-                  </div>
-                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
-                    <p class="text-sm font-bold text-white">Travail en groupe pluridisciplinaire</p>
-                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
-                      Collaboration fluide entre équipes R&amp;D, partenaires industriels et projets d’ingénierie collectifs.
-                    </p>
-                  </div>
-                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
-                    <p class="text-sm font-bold text-white">Leadership &amp; Sens des responsabilités</p>
-                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
-                      Expérience d’encadrement sportif (coach et capitaine de volley-ball) et de coordination de partenariats associatifs.
-                    </p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <!-- Qualités -->
+                <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                  <span class="font-mono text-[10px] uppercase tracking-wider text-sky-400 font-bold">Savoir-être</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2.5">Qualités professionnelles</h3>
+                  <ul class="space-y-2 text-xs sm:text-sm text-horology-steel">
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-horology-gold"></span><span><strong class="text-white">Créativité</strong> dans la résolution de problèmes techniques</span></li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-horology-gold"></span><span><strong class="text-white">Analyse et adaptation</strong> en environnement R&amp;D ou atelier</span></li>
+                    <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-horology-gold"></span><span><strong class="text-white">Travail en groupe</strong> &amp; leadership d’équipe</span></li>
+                  </ul>
+                </div>
+
+                <!-- Centres d'intérêt -->
+                <div class="p-4 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                  <span class="font-mono text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Ouverture &amp; Passions</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 mb-2.5">Centres d’intérêt</h3>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="p-2.5 rounded-xl bg-horology-card border border-horology-border">
+                      <p class="font-bold text-white">Volley-ball</p>
+                      <p class="text-[11px] text-horology-steelMuted mt-0.5">Esprit d’équipe &amp; coaching</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-horology-card border border-horology-border">
+                      <p class="font-bold text-white">Gastronomie</p>
+                      <p class="text-[11px] text-horology-steelMuted mt-0.5">Précision &amp; créativité</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-horology-card border border-horology-border">
+                      <p class="font-bold text-white">Histoire</p>
+                      <p class="text-[11px] text-horology-steelMuted mt-0.5">Culture générale &amp; stratégie</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-horology-card border border-horology-border">
+                      <p class="font-bold text-white">Armement</p>
+                      <p class="text-[11px] text-horology-steelMuted mt-0.5">Ingénierie des systèmes</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1302,7 +1266,7 @@
         },
 
         // -------------------------------------------------------------------
-        // 03H — FORMATION ACADÉMIQUE (LOGOS SIGMA & BUFFON + IMAGE SIGMA)
+        // 03H — FORMATION ACADÉMIQUE (LOGOS SIGMA & BUFFON + PHOTO SIGMA)
         // -------------------------------------------------------------------
         {
           step: 3,
@@ -1310,132 +1274,110 @@
           shortTitle: 'FORMATION',
           kicker: 'Rubrique 03 / 11 • 03h',
           title: 'Formation Académique',
-          subtitle: 'INP SIGMA Clermont (Mécanique — Spécialité MID) et CPGE MP* / MPSI au Lycée Buffon (Paris)',
+          subtitle: 'Cycle ingénieur mécanique à l’INP SIGMA Clermont et Classes Préparatoires aux Grandes Écoles à Paris',
           render: () => `
-            <div class="relative pl-6 border-l-2 border-horology-gold/60 space-y-5">
-              
+            <div class="space-y-4">
               <!-- INP SIGMA Clermont -->
-              <div class="relative">
-                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-horology-gold ring-4 ring-horology-surface"></span>
-                <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/85 border border-horology-gold/40 space-y-3">
-                  <div class="flex items-start justify-between gap-3">
-                    <div class="space-y-1.5 min-w-0">
-                      <div class="flex flex-wrap items-center gap-2">
-                        <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">
-                          2024 – 2027
-                        </span>
-                        <span class="font-mono text-xs text-horology-steelMuted">Clermont-Ferrand</span>
-                      </div>
-                      <h3 class="text-lg sm:text-xl font-bold text-white">
-                        INP SIGMA Clermont — Mécanique
-                      </h3>
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-gold/50">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                      <span class="px-2.5 py-0.5 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">2024 – 2027</span>
+                      <span class="font-mono text-xs text-horology-steelMuted">Clermont-Ferrand</span>
                     </div>
-                    ${renderLogoBadge('assets/logo_sigma.png', 'Logo INP SIGMA Clermont', 'SIGMA', 'w-14 h-14')}
+                    <h3 class="text-base sm:text-lg font-bold text-white">
+                      INP SIGMA Clermont — Diplôme d’Ingénieur en Mécanique
+                    </h3>
                   </div>
-
-                  <div class="space-y-2.5">
-                    <div class="p-3.5 rounded-xl bg-horology-card border border-horology-gold/30">
-                      <p class="font-mono text-xs text-horology-gold font-bold">
-                        Troisième année — Spécialité Matériaux Innovants et Durables (MID)
-                      </p>
-                      <p class="text-xs sm:text-sm text-horology-steel mt-1 leading-relaxed">
-                        Vibrations de structures, Caractérisation des matériaux, Incertitude probabiliste, Modélisation non-linéaire, Matériaux actifs.
-                      </p>
-                    </div>
-
-                    <div class="p-3.5 rounded-xl bg-horology-card border border-horology-border">
-                      <p class="font-mono text-xs text-sky-400 font-bold">
-                        Deuxième année — Domaine Structures et Matériaux (SMA)
-                      </p>
-                      <p class="text-xs sm:text-sm text-horology-steel mt-1 leading-relaxed">
-                        Matériaux composites, Résistance des matériaux, Machine learning, Deep learning, CAO, Viscoélasticité linéaire/plasticité, Méthode des éléments finis.
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Photo de l'INP SIGMA Clermont -->
-                  ${renderSinglePhotoCard(3, 0, 'Visuel de l’école • INP SIGMA Clermont')}
+                  ${renderLogoBadge('assets/logo_sigma.png', 'Logo INP SIGMA Clermont', 'SIGMA', 'w-14 h-14')}
                 </div>
+
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-horology-goldLight">Troisième année — Spécialité Matériaux Innovants et Durables (MID) :</strong>
+                    Vibrations de structures, Caractérisation des matériaux, Incertitude probabiliste, Modélisation non-linéaire, Matériaux actifs.
+                  </li>
+                  <li>
+                    <strong class="text-white">Deuxième année — Domaine Structures et Matériaux (SMA) :</strong>
+                    Matériaux composites, Résistance des matériaux, Machine learning, Deep learning, CAO, Viscoélasticité linéaire/plasticité, Méthode des éléments finis.
+                  </li>
+                </ul>
+
+                ${renderGalleryModule(3)}
               </div>
 
-              <!-- CPGE Buffon -->
-              <div class="relative">
-                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-sky-400 ring-4 ring-horology-surface"></span>
-                <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2.5">
-                  <div class="flex items-start justify-between gap-3">
-                    <div class="space-y-1.5 min-w-0">
-                      <div class="flex flex-wrap items-center gap-2">
-                        <span class="px-3 py-1 rounded-lg bg-horology-card text-sky-300 font-mono text-xs font-bold">
-                          2021 – 2024
-                        </span>
-                        <span class="font-mono text-xs text-horology-steelMuted">Paris</span>
-                      </div>
-                      <h3 class="text-lg sm:text-xl font-bold text-white">
-                        Classe Préparatoire aux Grandes Écoles (CPGE) Lycée Buffon
-                      </h3>
+              <!-- CPGE Lycée Buffon -->
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                      <span class="px-2.5 py-0.5 rounded-lg bg-horology-card text-sky-300 font-mono text-xs font-bold">2021 – 2024</span>
+                      <span class="font-mono text-xs text-horology-steelMuted">Paris</span>
                     </div>
-                    ${renderLogoBadge('assets/logo_buffon.png', 'Logo Lycée Buffon Paris', 'BUFFON', 'w-14 h-14')}
+                    <h3 class="text-base sm:text-lg font-bold text-white">
+                      Classe Préparatoire aux Grandes Écoles (CPGE) Lycée Buffon
+                    </h3>
                   </div>
-                  <ul class="space-y-1.5 text-xs sm:text-sm text-horology-steel">
-                    <li><strong class="text-white">MP* (2022 – 2024) :</strong> Maths, Physique, Option Informatique.</li>
-                    <li><strong class="text-white">MPSI (2021 – 2022) :</strong> Maths, Physique, Sciences de l’ingénieur.</li>
-                  </ul>
+                  ${renderLogoBadge('assets/buffon.jpg', 'Logo Lycée Buffon Paris', 'BUFFON', 'w-14 h-14')}
                 </div>
-              </div>
 
+                <ul class="space-y-1.5 text-xs sm:text-sm text-horology-steel">
+                  <li><strong class="text-white">MP* (2022 – 2024) :</strong> Mathématiques, Physique, Option Informatique.</li>
+                  <li><strong class="text-white">MPSI (2021 – 2022) :</strong> Mathématiques, Physique, Sciences de l’ingénieur.</li>
+                </ul>
+              </div>
             </div>
           `
         },
 
         // -------------------------------------------------------------------
-        // 04H — PROJET INDUSTRIEL EN COURS : SAFRAN TRANSMISSION SYSTEMS
+        // 04H — PROJET INDUSTRIEL SAFRAN TRANSMISSION SYSTEMS
         // -------------------------------------------------------------------
         {
           step: 4,
           hourLabel: '04H',
-          shortTitle: 'PROJET SAFRAN',
+          shortTitle: 'SAFRAN',
           kicker: 'Rubrique 04 / 11 • 04h',
           title: 'Projet Industriel — Safran Transmission Systems',
-          subtitle: 'Comparaison de méthodes d’estimation d’une limite de fatigue (2026 – En cours • INP SIGMA Clermont)',
+          subtitle: 'Comparaison de méthodes statistiques d’estimation d’une limite de fatigue (Probit vs. Modèle ISO 12107)',
           render: () => `
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-3.5">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">2026 – En cours</span>
-                  <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-mono text-xs font-bold">Safran Transmission Systems</span>
-                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Norme ISO 12107:2012</span>
+            <div class="space-y-4">
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-gold/50">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Projet en cours • 2026</span>
+                    <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Transmissions aéronautiques</span>
+                  </div>
+                  ${renderLogoBadge('assets/logo_safran.png', 'Logo Safran Transmission Systems', 'SAFRAN', 'w-16 h-14')}
                 </div>
-                ${renderLogoBadge('assets/logo_safran.png', 'Logo Safran Transmission Systems', 'SAFRAN', 'w-14 h-14')}
-              </div>
 
-              <!-- Contexte industriel -->
-              <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-gold/35 mb-3.5">
-                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
-                  <strong class="text-horology-goldLight">Contexte &amp; objectifs :</strong> Dimensionnement en fatigue à durée de vie infinie de transmissions mécaniques soumises à des chargements cycliques. Étude comparative des hypothèses, limites et complémentarités entre la <strong class="text-white">méthode binaire Probit</strong> (Maximum de Vraisemblance, estimation de <span class="font-mono text-horology-goldLight">S<sub>50%</sub></span> et <span class="font-mono text-horology-goldLight">σ = 1/b</span>) et la <strong class="text-white">méthode par modèle de fatigue probabiliste</strong> (norme <span class="font-mono">ISO 12107:2012</span>, loi de Basquin), avec en perspective l’estimation de <strong class="text-white">marges de sécurité sur nombre d’essais limité</strong> (Perrin et al., <em>Structural Safety</em>, 2026).
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-3">
+                  Étude comparative des méthodes statistiques d’estimation de la limite d’endurance en fatigue à durée de vie infinie sur des transmissions mécaniques soumises à des chargements cycliques : confrontation entre la <strong class="text-white">régression Probit</strong> (probabilité binaire rupture/non-rupture) et l’<strong class="text-white">approche par modèle probabiliste</strong> (<span class="font-mono text-xs text-sky-300">ISO 12107:2012</span>).
                 </p>
-              </div>
 
-              <!-- Travaux et résultats obtenus -->
-              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
-                  <span>
-                    <strong class="text-white">Sensibilité à la taille d’échantillon (Monte-Carlo, 150 tirages indépendants) :</strong> Simulations sur 5 paliers (<span class="font-mono">440 à 560 MPa</span>, <span class="font-mono text-horology-goldLight">S<sub>50%</sub><sup>théorique</sup> = 500,79 MPa</span>). Identification de la <strong class="text-white">zone optimale de 40 à 60 éprouvettes</strong> (<span class="font-mono">8–12</span>/palier, erreur stabilisée à <span class="font-mono">~1,2–1,4 %</span>), confirmation de la mise en garde ISO 12107 sous <span class="font-mono">15–28</span> éprouvettes, et passage sous <span class="font-mono">1 %</span> d’erreur à <span class="font-mono">100–150</span> éprouvettes.
-                  </span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
-                  <span>
-                    <strong class="text-white">Sensibilité au pas entre paliers de contrainte <span class="font-mono">d</span> :</strong> Étude sur <span class="font-mono">50</span> éprouvettes (<span class="font-mono">d</span> de <span class="font-mono">5</span> à <span class="font-mono">100 MPa</span>) validant la <strong class="text-white">fenêtre optimale <span class="font-mono text-sky-300">d ∈ [20, 40] MPa</span></strong> (<span class="font-mono">0,5 ≤ d/σ ≤ 2,0</span>), où l’erreur sur <span class="font-mono">σ</span> atteint son minimum (<span class="font-mono">~20 %</span>) et celle sur <span class="font-mono">S<sub>50%</sub></span> reste <span class="font-mono">&lt; 1,3 %</span>.
-                  </span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
-                  <span>
-                    <strong class="text-white">Implémentation Python &amp; validation statistique :</strong> Régression Maximum de Vraisemblance Probit, test <span class="font-mono">χ²</span> de linéarité, estimateur non paramétrique de Kärber et IC 95 % validés sur <strong class="text-white">NBS Handbook 91</strong> (<span class="font-mono">ED<sub>50</sub> = 27,801 V</span>, <span class="font-mono">p = 0,9888</span>) et <strong class="text-white">Finney 1952</strong> (<span class="font-mono">ED<sub>50</sub> = 5,113 mg/L</span>, <span class="font-mono">p = 0,8927</span>).
-                  </span>
-                </li>
-              </ul>
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-horology-goldLight">Sensibilité à la taille d’échantillon (Monte-Carlo, 150 tirages) :</strong>
+                    simulations de campagnes virtuelles de fatigue (<span class="font-mono text-xs">S<sub>50%</sub> = 500,79 MPa</span> sur 5 paliers de 440 à 560 MPa) mettant en évidence la fenêtre optimale de <strong class="text-white">40 à 60 éprouvettes</strong> (erreur relative stabilisée autour de 1,2 % à 1,4 %) et le passage sous 1 % à partir de 100 éprouvettes.
+                  </li>
+                  <li>
+                    <strong class="text-white">Optimisation du pas entre paliers de contrainte :</strong>
+                    identification de la zone optimale <span class="font-mono text-xs text-emerald-300">d ∈ [20, 40] MPa</span> (<span class="font-mono text-xs">0,5 ≤ d/σ ≤ 2,0</span>) minimisant simultanément l’erreur sur la contrainte médiane <span class="font-mono text-xs">S<sub>50%</sub></span> (&lt; 1,3 %) et sur la dispersion <span class="font-mono text-xs">σ = 1/b</span>.
+                  </li>
+                  <li>
+                    <strong class="text-white">Validation algorithmique &amp; perspectives :</strong>
+                    implémentation Python par Maximum de Vraisemblance et estimateur de Kärber validée sur les jeux de référence <strong class="text-white">NBS Handbook 91</strong> (<span class="font-mono text-xs">p = 0,9888</span>) et <strong class="text-white">Finney 1952</strong> (<span class="font-mono text-xs">p = 0,8927</span>), avec ouverture vers le calcul de marges en effectif limité.
+                  </li>
+                </ul>
+
+                <div class="mt-3 pt-3 border-t border-horology-border flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-horology-goldLight">Python</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-horology-goldLight">Monte-Carlo</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">Régression Probit</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">ISO 12107:2012</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-emerald-300">Fiabilité &amp; Fatigue</span>
+                </div>
+              </div>
 
               ${renderGalleryModule(4)}
             </div>
@@ -1443,43 +1385,51 @@
         },
 
         // -------------------------------------------------------------------
-        // 05H — STAGE ASSISTANT INGÉNIEUR R&D — ICIMB ŁUKASIEWICZ
+        // 05H — STAGE ASSISTANT INGÉNIEUR ICIMB ŁUKASIEWICZ
         // -------------------------------------------------------------------
         {
           step: 5,
           hourLabel: '05H',
-          shortTitle: 'R&D ICIMB',
+          shortTitle: 'ICIMB R&D',
           kicker: 'Rubrique 05 / 11 • 05h',
-          title: 'Stage Assistant Ingénieur — ICIMB Łukasiewicz',
-          subtitle: 'Sieć Badawcza Łukasiewicz, Instytut Ceramiki i Materiałów Budowlanych (Varsovie • Mai 2026 à Août 2026)',
+          title: 'Stage Assistant Ingénieur — ICIMB (Łukasiewicz)',
+          subtitle: 'Sieć Badawcza Łukasiewicz — Instytut Ceramiki i Materiałów Budowlanych',
           render: () => `
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-4">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Mai 2026 – Août 2026</span>
-                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Varsovie • R&amp;D Matériaux Céramiques</span>
+            <div class="space-y-4">
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-gold/50">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Mai 2026 – Août 2026</span>
+                    <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">R&amp;D Céramiques &amp; Matériaux</span>
+                  </div>
+                  ${renderLogoBadge('assets/logo_icimb.png', 'Logo ICIMB Łukasiewicz', 'ICIMB', 'w-16 h-14')}
                 </div>
-                ${renderLogoBadge('assets/logo_icimb.png', 'Logo ICIMB Łukasiewicz', 'ICIMB', 'w-14 h-14')}
-              </div>
 
-              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Conception de système de stockage d’énergie thermique en céramique</strong> élaboré à partir de <strong class="text-white">matières premières issues de déchets</strong>.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Recherche de la meilleure composition et géométrie</strong> avec les procédés de fabrication les plus simples en vue d’une <strong class="text-white">production de masse</strong>.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Caractérisation et certification de matériaux</strong> pour des clients industriels.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Maîtrise expérimentale :</strong> <span class="font-mono text-horology-goldLight">BET, DRX, ATG-ATD, MEB, STEM, DSC et Mouton de Charpy</span>.</span>
-                </li>
-              </ul>
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-white">Stockage d’énergie thermique en céramique :</strong>
+                    conception d’un système de stockage thermique élaboré à partir de <strong class="text-horology-goldLight">matières premières issues de déchets</strong>.
+                  </li>
+                  <li>
+                    <strong class="text-white">Optimisation composition, géométrie &amp; industrialisation :</strong>
+                    recherche de la meilleure formulation et géométrie avec les procédés de fabrication les plus simples en vue d’une <strong class="text-white">production de masse</strong>.
+                  </li>
+                  <li>
+                    <strong class="text-white">Caractérisation et certification clients :</strong>
+                    réalisation d’analyses physico-chimiques, microstructurales et mécaniques pour la certification de matériaux industriels.
+                  </li>
+                </ul>
+
+                <div class="mt-3 pt-3 border-t border-horology-border flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">BET</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">DRX</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">ATG-ATD</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">MEB</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">STEM</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">DSC</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-horology-goldLight">Mouton de Charpy</span>
+                </div>
+              </div>
 
               ${renderGalleryModule(5)}
             </div>
@@ -1487,39 +1437,45 @@
         },
 
         // -------------------------------------------------------------------
-        // 06H — PROJET INDUSTRIEL 2E ANNÉE — PHIMECA
+        // 06H — PROJET INDUSTRIEL PHIMECA
         // -------------------------------------------------------------------
         {
           step: 6,
           hourLabel: '06H',
-          shortTitle: 'PROJET PHIMECA',
+          shortTitle: 'PHIMECA',
           kicker: 'Rubrique 06 / 11 • 06h',
-          title: 'Projet Industriel 2e Année — PHIMECA',
-          subtitle: 'Prédiction par machine learning de propriétés de matériaux et optimisation inverse (INP SIGMA Clermont)',
+          title: 'Projet Industriel 2ᵉ Année — PHIMECA',
+          subtitle: 'Prédiction par Machine Learning des propriétés de matériaux et optimisation inverse',
           render: () => `
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-4">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-mono text-xs font-bold">2<sup>e</sup> année INP SIGMA Clermont</span>
-                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-goldLight font-mono text-xs border border-horology-border">Partenaire : PHIMECA</span>
+            <div class="space-y-4">
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-sky-400/40">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-mono text-xs font-bold">2ᵉ année • INP SIGMA Clermont</span>
+                    <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Data Science &amp; Matériaux</span>
+                  </div>
+                  ${renderLogoBadge('assets/logo_phimeca.png', 'Logo PHIMECA', 'PHIMECA', 'w-16 h-14')}
                 </div>
-                ${renderLogoBadge('assets/logo_phimeca.png', 'Logo PHIMECA', 'PHIMECA', 'w-14 h-14')}
-              </div>
 
-              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Prédiction par machine learning</strong> des propriétés physiques et mécaniques de matériaux à partir de leurs descripteurs.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Optimisation inverse</strong> pour le design de nouveaux matériaux répondant à des <strong class="text-white">propriétés cibles</strong>.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Méthodes &amp; algorithmes :</strong> <span class="font-mono text-horology-goldLight">Optimisation bayésienne et génétique sur CNN, SVR, XGBoost</span>.</span>
-                </li>
-              </ul>
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-white">Prédiction de propriétés matériaux :</strong>
+                    construction et validation de modèles d’apprentissage automatique pour estimer les performances physiques à partir de descripteurs matériaux.
+                  </li>
+                  <li>
+                    <strong class="text-white">Design inverse de nouveaux matériaux :</strong>
+                    mise en œuvre d’algorithmes d’<strong class="text-horology-goldLight">optimisation bayésienne et génétique</strong> afin d’identifier des candidats atteignant des propriétés cibles.
+                  </li>
+                </ul>
+
+                <div class="mt-3 pt-3 border-t border-horology-border flex flex-wrap gap-1.5 text-[11px] font-mono">
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-emerald-300">Python</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">CNN</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">SVR</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-sky-300">XGBoost</span>
+                  <span class="px-2.5 py-1 rounded-md bg-horology-card text-horology-goldLight">Optimisation bayésienne &amp; génétique</span>
+                </div>
+              </div>
 
               ${renderGalleryModule(6)}
             </div>
@@ -1527,36 +1483,36 @@
         },
 
         // -------------------------------------------------------------------
-        // 07H — STAGE OUVRIER — MECALOC TP
+        // 07H — STAGE OUVRIER MECALOC TP
         // -------------------------------------------------------------------
         {
           step: 7,
           hourLabel: '07H',
           shortTitle: 'MECALOC TP',
           kicker: 'Rubrique 07 / 11 • 07h',
-          title: 'Stage Ouvrier de Première Année — MECALOC TP',
-          subtitle: 'Réparation, maintenance et location d’engins de travaux publics pour entreprises et particuliers (Juillet 2025)',
+          title: 'Stage Ouvrier 1ʳᵉ Année — MECALOC TP',
+          subtitle: 'Réparation, maintenance et location d’engins et matériels de travaux publics',
           render: () => `
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-4">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Juillet 2025</span>
-                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Atelier &amp; Maintenance TP</span>
+            <div class="space-y-4">
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-border">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-mono text-xs font-bold">Juillet 2025</span>
+                    <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Maintenance industrielle &amp; TP</span>
+                  </div>
+                  ${renderLogoBadge('assets/logo_mecaloc.png', 'Logo MECALOC TP', 'MECALOC', 'w-16 h-14')}
                 </div>
-                ${renderLogoBadge('assets/logo_mecaloc.png', 'Logo MECALOC TP', 'MECALOC', 'w-14 h-14')}
-              </div>
 
-              <p class="text-xs sm:text-sm text-horology-steel leading-relaxed mb-3">
-                Immersion en atelier au sein de <strong class="text-white">MECALOC TP</strong> (réparation, maintenance et location d’engins de travaux publics pour des entreprises et particuliers) :
-              </p>
-
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Marteaux-piqueurs</div>
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Plaques vibrantes</div>
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Pilonneuses</div>
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Jeux de feux tricolores</div>
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Batteries</div>
-                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Peinture</div>
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-white">Maintenance d’engins de chantier :</strong>
+                    diagnostic, démontage et réparation de matériels fortement sollicités : <strong class="text-horology-goldLight">marteaux-piqueurs, plaques vibrantes, pilonneuses</strong>.
+                  </li>
+                  <li>
+                    <strong class="text-white">Équipements électriques &amp; finition :</strong>
+                    remise en état de jeux de feux tricolores, maintenance de batteries, préparation et peinture avant remise en location.
+                  </li>
+                </ul>
               </div>
 
               ${renderGalleryModule(7)}
@@ -1565,35 +1521,37 @@
         },
 
         // -------------------------------------------------------------------
-        // 08H — SPORT & LEADERSHIP — VOLLEY-BALL SIGMA CLERMONT (LOGO + 2 PHOTOS)
+        // 08H — SPORT & LEADERSHIP : VOLLEY-BALL (LOGO + 2 PHOTOS)
         // -------------------------------------------------------------------
         {
           step: 8,
           hourLabel: '08H',
           shortTitle: 'VOLLEY-BALL',
           kicker: 'Rubrique 08 / 11 • 08h',
-          title: 'Sport & Leadership — Volley-ball SIGMA Clermont',
-          subtitle: 'Coach et capitaine de l’équipe de volley-ball de l’INP SIGMA Clermont',
+          title: 'Coach & Capitaine — Volley-ball SIGMA Clermont',
+          subtitle: 'Encadrement sportif, préparation tactique et leadership d’équipe universitaire',
           render: () => `
-            <div>
-              <div class="flex items-center justify-between gap-3 mb-4">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Coach &amp; Capitaine</span>
-                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Équipe Volley-ball SIGMA Clermont</span>
+            <div class="space-y-4">
+              <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/90 border border-horology-gold/40">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Coach &amp; Capitaine</span>
+                    <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Équipe Volley-ball SIGMA Clermont</span>
+                  </div>
+                  ${renderLogoBadge('assets/logo_volley.jpg', 'Logo Équipe Volley-ball SIGMA Clermont', 'VOLLEY', 'w-14 h-14')}
                 </div>
-                ${renderLogoBadge('assets/logo_volley.png', 'Logo Équipe Volley-ball SIGMA Clermont', 'VOLLEY', 'w-14 h-14')}
-              </div>
 
-              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Encadrement des entraînements :</strong> préparation des séances techniques et tactiques hebdomadaires de l’équipe.</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
-                  <span><strong class="text-white">Capitanat en compétition :</strong> cohésion du collectif, communication sur le terrain et gestion des temps forts.</span>
-                </li>
-              </ul>
+                <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  <li>
+                    <strong class="text-white">Planification et coaching :</strong>
+                    conception des séances d’entraînement hebdomadaires, travail technique individuel et cohésion collective.
+                  </li>
+                  <li>
+                    <strong class="text-white">Capitaine en compétition :</strong>
+                    gestion tactique en match universitaire, fédération du groupe et prise de décision sous pression.
+                  </li>
+                </ul>
+              </div>
 
               ${renderGalleryModule(8)}
             </div>
@@ -1601,26 +1559,26 @@
         },
 
         // -------------------------------------------------------------------
-        // 09H — ENGAGEMENTS ASSOCIATIFS — FIZZTEAM & REMISE DES DIPLÔMES (LOGOS + 1 PHOTO CHACUNE)
+        // 09H — ENGAGEMENTS ASSOCIATIFS : FIZZTEAM & RDD (LOGOS + 1 PHOTO CHACUN)
         // -------------------------------------------------------------------
         {
           step: 9,
           hourLabel: '09H',
-          shortTitle: 'VIE ASSOCIATIVE',
+          shortTitle: 'ASSOCIATIF',
           kicker: 'Rubrique 09 / 11 • 09h',
-          title: 'Vie Associative — FizZteam & Remise des Diplômes',
-          subtitle: 'Engagement étudiant au sein du foyer de l’école et des relations entreprises à l’INP SIGMA Clermont',
+          title: 'Engagements Associatifs — FizZteam & RDD',
+          subtitle: 'Animation du foyer étudiant et gestion des partenariats pour la Remise des Diplômes',
           render: () => `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Association 1 : FizZteam (Logo + 1 photo dédiée) -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-gold/35 flex flex-col justify-between">
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-gold/40 flex flex-col justify-between">
                 <div>
                   <div class="flex items-start justify-between gap-2.5 mb-2">
                     <div>
                       <p class="font-mono text-[10px] uppercase text-horology-gold font-bold">Foyer de l’école</p>
                       <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">Membre actif — FizZteam</h3>
                     </div>
-                    ${renderLogoBadge('assets/logo_fizzteam.png', 'Logo FizZteam SIGMA Clermont', 'FIZZ', 'w-12 h-12')}
+                    ${renderLogoBadge('assets/logo_fizzteam.jpg', 'Logo FizZteam SIGMA Clermont', 'FIZZ', 'w-12 h-12')}
                   </div>
                   <p class="text-xs text-horology-steel leading-relaxed">
                     Animation de la vie étudiante, gestion quotidienne du foyer et organisation d’événements conviviaux à SIGMA Clermont.
@@ -1638,10 +1596,10 @@
                       <p class="font-mono text-[10px] uppercase text-sky-400 font-bold">Relations Entreprises</p>
                       <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">Responsable Partenariats — RDD</h3>
                     </div>
-                    ${renderLogoBadge('assets/logo_rdd.png', 'Logo Remise des Diplômes SIGMA', 'RDD', 'w-12 h-12')}
+                    ${renderLogoBadge('assets/logo_rdd.jpg', 'Logo Remise des Diplômes SIGMA', 'RDD', 'w-12 h-12')}
                   </div>
                   <p class="text-xs text-horology-steel leading-relaxed">
-                    Prospection d’entreprises, négociation de partenariats et coordination logistique de la cérémonie de remise des diplômes.
+                    Prospection d’entreprises partenaires, négociation des soutiens financiers et logistiques pour la cérémonie officielle de Remise des Diplômes.
                   </p>
                 </div>
 
@@ -1652,15 +1610,15 @@
         },
 
         // -------------------------------------------------------------------
-        // 10H — DOCUMENTS TÉLÉCHARGEABLES & GUIDE ASSETS/
+        // 10H — DOCUMENTS D'INTÉRÊT (SANS GUIDE RAPIDE)
         // -------------------------------------------------------------------
         {
           step: 10,
           hourLabel: '10H',
           shortTitle: 'DOCUMENTS',
           kicker: 'Rubrique 10 / 11 • 10h',
-          title: 'Documents d’Intérêt & Guide GitHub assets/',
-          subtitle: 'CV, lettre de motivation, diplômes, certifications, recommandations, articles scientifiques et repères des fichiers',
+          title: 'Documents d’Intérêt',
+          subtitle: 'CV, lettre de motivation, diplômes, certifications, recommandations et articles scientifiques',
           render: () => `
             <div class="space-y-4">
               <!-- Grille des 6 documents PDF d'intérêt -->
@@ -1760,27 +1718,6 @@
                     Consulter ↓
                   </span>
                 </a>
-              </div>
-
-              <!-- Guide rapide d'ajout des logos, images et PDF dans assets/ sur GitHub -->
-              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2">
-                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold">
-                  Guide rapide • Fichiers attendus sur GitHub (dossier assets/)
-                </h3>
-                <p class="text-xs text-horology-steel leading-relaxed">
-                  Déposez vos logos, photos et documents dans <code class="px-1.5 py-0.5 rounded bg-horology-card text-horology-goldLight">assets/</code> à côté de <code class="px-1.5 py-0.5 rounded bg-horology-card text-white">index.html</code> :
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 font-mono text-[11px] text-horology-steelMuted pt-1">
-                  <div>• <span class="text-white">00h :</span> photo.jpg</div>
-                  <div>• <span class="text-white">03h :</span> logo_sigma.png, logo_buffon.png, sigma.jpg</div>
-                  <div>• <span class="text-white">04h :</span> logo_safran.png, safran_1.jpg à 3.jpg</div>
-                  <div>• <span class="text-white">05h :</span> logo_icimb.png, icimb_1.jpg à 3.jpg</div>
-                  <div>• <span class="text-white">06h :</span> logo_phimeca.png, phimeca_1.jpg à 3.jpg</div>
-                  <div>• <span class="text-white">07h :</span> logo_mecaloc.png, mecaloc_1.jpg à 3.jpg</div>
-                  <div>• <span class="text-white">08h :</span> logo_volley.png, volley_1.jpg, volley_2.jpg</div>
-                  <div>• <span class="text-white">09h :</span> logo_fizzteam.png, fizzteam.jpg, logo_rdd.png, rdd.jpg</div>
-                  <div class="sm:col-span-2">• <span class="text-white">10h PDF :</span> CV, Lettre_Motivation, Diplomes, Certifications, Lettres_Recommandation, Articles_Scientifiques (.pdf)</div>
-                </div>
               </div>
 
               <!-- Sommaire rapide des 11 rubriques -->
@@ -2224,7 +2161,7 @@
           });
         });
 
-        // Changement de vignette active dans les galeries (04h à 09h)
+        // Changement de vignette active dans les galeries (03h à 09h)
         stageDynamicBody.querySelectorAll('.gallery-thumb-btn').forEach((btn) => {
           btn.addEventListener('click', () => {
             const step = parseInt(btn.getAttribute('data-gallery-step'), 10);
@@ -2247,7 +2184,7 @@
           });
         });
 
-        // Prévisualisation immédiate d'une photo locale choisie par l'utilisateur
+        // Prévisualisation immédiate d'une photo locale choisie dans une galerie
         stageDynamicBody.querySelectorAll('.gallery-local-input').forEach((input) => {
           input.addEventListener('change', (e) => {
             const file = e.target.files && e.target.files[0];
@@ -2279,7 +2216,6 @@
           if (backwardDelta === 0) backwardDelta = 12;
           cumulativeHandSteps -= backwardDelta;
         } else {
-          // Mouvement le plus naturel autour du cadran (ex: 11h -> 00h avance de +1 cran à 12h)
           let delta = currentStep - prevStep;
           if (delta > 6) delta -= 12;
           if (delta < -6) delta += 12;
@@ -2405,7 +2341,6 @@
           if (currentStep < 11) {
             goToStep(currentStep + 1, true, 'clockwise');
           } else {
-            // À 11h, "Suivant · 12h →" fait tourner l'aiguille jusqu'à 12h et revient directement à 00h
             goToStep(0, true, 'clockwise');
           }
         });
