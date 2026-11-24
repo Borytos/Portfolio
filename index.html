@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio horloger interactif de Borys Lucjanek — Étudiant ingénieur en dernière année à l'INP SIGMA Clermont (Spécialité Matériaux Innovants et Durables), spécialisé en sciences des matériaux, mécanique et simulation numérique." />
+  <title>Portfolio Horloger — Borys Lucjanek | Ingénieur Matériaux &amp; Mécanique</title>
+
+  <!-- Polices Google Fonts : Inter/Plus Jakarta Sans, Playfair Display & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            horology: {
+              bg: '#070b14',
+              surface: '#0e1625',
+              card: '#131e32',
+              border: '#20304a',
+              gold: '#d4af37',
+              goldLight: '#f3e5ab',
+              goldDark: '#997a15',
+              steel: '#cbd5e1',
+              steelMuted: '#94a3b8'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          boxShadow: {
+            watch: '0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(212, 175, 55, 0.25)',
+            'gold-glow': '0 0 24px rgba(212, 175, 55, 0.35)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #070b14;
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(212, 175, 55, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 84% 78%, rgba(56, 189, 248, 0.07) 0%, transparent 45%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    /* Texture guillochée subtile sur le fond du cadran */
+    .dial-guilloche {
+      background:
+        repeating-radial-gradient(
+          circle at 50% 50%,
+          rgba(212, 175, 55, 0.03) 0px,
+          rgba(212, 175, 55, 0.03) 2px,
+          transparent 2px,
+          transparent 8px
+        ),
+        radial-gradient(circle at 50% 42%, #17233b 0%, #0b1220 68%, #060a12 100%);
+    }
+
+    /* Transition fluide mécanique de l'aiguille des heures */
+    #watch-hour-hand {
+      transform-origin: 220px 220px;
+      transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    /* Balancier mécanique oscillant */
+    @keyframes balanceOscillate {
+      0%, 100% { transform: rotate(-22deg); }
+      50% { transform: rotate(22deg); }
+    }
+
+    #balance-wheel {
+      transform-origin: 122px 220px;
+      animation: balanceOscillate 1.8s ease-in-out infinite;
+    }
+
+    /* Jauge circulaire de réserve de marche */
+    #power-reserve-arc {
+      transition: stroke-dashoffset 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Stabilité stricte des boutons de navigation (hauteur fixe 46px, sans retour à la ligne) */
+    .watch-nav-btn {
+      height: 46px;
+      min-height: 46px;
+      max-height: 46px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    /* Animation d'apparition du contenu de chaque rubrique */
+    @keyframes stageFadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stage-animate {
+      animation: stageFadeSlide 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Index horaires cliquables sur le cadran */
+    .hour-marker-group {
+      cursor: pointer;
+    }
+    .hour-marker-group:hover .hour-numeral,
+    .hour-marker-group:focus-visible .hour-numeral {
+      fill: #f3e5ab;
+    }
+    .hour-marker-group:hover .hour-hit-ring {
+      stroke: rgba(212, 175, 55, 0.55);
+    }
+
+    /* Barre de défilement discrète */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070b14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #20304a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d4af37;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-horology-gold selection:text-horology-bg">
+
+  <!-- =====================================================================
+       EN-TÊTE MINIMALISTE & ACCÈS RAPIDES
+       ===================================================================== -->
+  <header class="w-full border-b border-horology-border/80 bg-horology-bg/90 backdrop-blur-md sticky top-0 z-30 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Identité & Emblème -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-full border-2 border-horology-gold bg-horology-surface flex items-center justify-center shrink-0 shadow-gold-glow">
+          <span class="font-serif font-bold text-horology-gold text-base tracking-wider">BL</span>
+        </div>
+        <div class="truncate">
+          <p class="text-sm sm:text-base font-bold text-white tracking-tight truncate">Borys Lucjanek</p>
+          <p class="text-[11px] sm:text-xs font-mono text-horology-steelMuted truncate">
+            INP SIGMA Clermont • Matériaux Innovants &amp; Durables
+          </p>
+        </div>
+      </div>
+
+      <!-- Accès directs : Accueil (00h) & Contact (11h) -->
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-goto-step="0"
+          class="step-jump-btn px-3 py-2 rounded-xl text-xs font-mono font-semibold bg-horology-surface border border-horology-border text-horology-steel hover:border-horology-gold hover:text-white transition-colors"
+        >
+          00h
+        </button>
+        <button
+          type="button"
+          data-goto-step="11"
+          class="step-jump-btn px-3.5 py-2 rounded-xl text-xs font-mono font-semibold bg-horology-gold/15 border border-horology-gold/60 text-horology-goldLight hover:bg-horology-gold hover:text-horology-bg transition-colors"
+        >
+          11h • Contact
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       SCÈNE PRINCIPALE : CADRAN HORLOGER À GAUCHE + FICHE DÉTAILLÉE À DROITE
+       ===================================================================== -->
+  <main id="interactive-stage-wrapper" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex flex-col justify-center">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+      <!-- ===================================================================
+           COLONNE GAUCHE : CADRAN DE MONTRE INTERACTIF (00H À 11H, BOUCLE 12H)
+           =================================================================== -->
+      <section aria-label="Cadran horloger de navigation" class="lg:col-span-5 flex flex-col items-center lg:sticky lg:top-24">
+        
+        <!-- Boîtier circulaire de la montre -->
+        <div class="relative w-full max-w-[350px] sm:max-w-[390px] lg:max-w-[400px] aspect-square rounded-full p-2.5 sm:p-3 bg-gradient-to-br from-slate-700 via-slate-900 to-slate-950 shadow-watch border border-horology-gold/35 flex items-center justify-center">
+          
+          <!-- Couronne de remontoir décorative à droite -->
+          <div aria-hidden="true" class="hidden sm:flex flex-col justify-between items-center absolute -right-3.5 top-1/2 -translate-y-1/2 w-3.5 h-14 rounded-r-lg bg-gradient-to-b from-horology-goldLight via-horology-gold to-horology-goldDark border border-amber-200/40 shadow-lg py-1.5">
+            <span class="w-full h-[1.5px] bg-amber-950/60"></span>
+            <span class="w-full h-[1.5px] bg-amber-950/60"></span>
+            <span class="w-full h-[1.5px] bg-amber-950/60"></span>
+            <span class="w-full h-[1.5px] bg-amber-950/60"></span>
+            <span class="w-full h-[1.5px] bg-amber-950/60"></span>
+          </div>
+
+          <!-- Cadran SVG Haute Horlogerie (440x440) -->
+          <svg
+            id="watch-dial-svg"
+            viewBox="0 0 440 440"
+            class="w-full h-full rounded-full dial-guilloche select-none"
+            role="img"
+            aria-label="Cadran de montre interactif comportant 11 rubriques de 00h à 11h"
+          >
+            <defs>
+              <linearGradient id="goldBevel" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f3e5ab" />
+                <stop offset="45%" stop-color="#d4af37" />
+                <stop offset="100%" stop-color="#8a6b14" />
+              </linearGradient>
+
+              <linearGradient id="handFacetLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fffbeb" />
+                <stop offset="100%" stop-color="#d4af37" />
+              </linearGradient>
+
+              <linearGradient id="handFacetRight" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#b88e1e" />
+                <stop offset="100%" stop-color="#6e5209" />
+              </linearGradient>
+
+              <filter id="handShadow" x="-25%" y="-25%" width="150%" height="150%">
+                <feDropShadow dx="0" dy="5" stdDeviation="4.5" flood-color="#000000" flood-opacity="0.7" />
+              </filter>
+
+              <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- 1. Lunette extérieure -->
+            <circle cx="220" cy="220" r="214" fill="none" stroke="url(#goldBevel)" stroke-width="3.5" />
+            <circle cx="220" cy="220" r="205" fill="none" stroke="#1e293b" stroke-width="2" />
+
+            <!-- 2. Anneau de réserve de marche (0% à 100%) -->
+            <circle cx="220" cy="220" r="186" fill="none" stroke="rgba(148, 163, 184, 0.14)" stroke-width="6" />
+            <circle
+              id="power-reserve-arc"
+              cx="220"
+              cy="220"
+              r="186"
+              fill="none"
+              stroke="url(#goldBevel)"
+              stroke-width="6"
+              stroke-linecap="round"
+              stroke-dasharray="1168.67"
+              stroke-dashoffset="1168.67"
+              transform="rotate(-90 220 220)"
+            />
+
+            <!-- 3. Chemin de fer intérieur -->
+            <circle cx="220" cy="220" r="179" fill="none" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1" />
+            <circle cx="220" cy="220" r="168" fill="none" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" />
+
+            <!-- 4. Sous-cadran balancier mécanique à 9h -->
+            <g opacity="0.65">
+              <circle cx="122" cy="220" r="32" fill="#060a12" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1.2" />
+              <g id="balance-wheel">
+                <circle cx="122" cy="220" r="22" fill="none" stroke="#d4af37" stroke-width="1.8" stroke-dasharray="6 3" />
+                <line x1="100" y1="220" x2="144" y2="220" stroke="#d4af37" stroke-width="1.2" />
+                <line x1="122" y1="198" x2="122" y2="242" stroke="#d4af37" stroke-width="1.2" />
+              </g>
+              <circle cx="122" cy="220" r="4.5" fill="#e11d48" />
+            </g>
+
+            <!-- 5. Graduations des 60 minutes (générées en JS) -->
+            <g id="minute-ticks-layer"></g>
+
+            <!-- 6. Index horaires 1 à 12 cliquables (générés en JS) -->
+            <g id="hour-markers-layer"></g>
+
+            <!-- 7. Signature horlogère à 12h -->
+            <text x="220" y="114" text-anchor="middle" fill="#f3e5ab" font-family="Playfair Display, Georgia, serif" font-weight="700" font-size="13" letter-spacing="2.5">
+              BORYS LUCJANEK
+            </text>
+            <text x="220" y="130" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-weight="500" font-size="8.5" letter-spacing="1.6">
+              SIGMA CLERMONT • MID
+            </text>
+
+            <!-- 8. Guichet de complication à 6h affichant uniquement l'heure courante et le titre -->
+            <g transform="translate(220, 294)">
+              <rect x="-68" y="-22" width="136" height="44" rx="8" fill="#060a12" stroke="url(#goldBevel)" stroke-width="1.5" />
+              <text id="dial-aperture-step" x="0" y="-4" text-anchor="middle" fill="#d4af37" font-family="JetBrains Mono, monospace" font-weight="700" font-size="9.5" letter-spacing="1.1">
+                00 / 11H • 0%
+              </text>
+              <text id="dial-aperture-label" x="0" y="12" text-anchor="middle" fill="#f1f5f9" font-family="Plus Jakarta Sans, sans-serif" font-weight="600" font-size="9.2" letter-spacing="0.4">
+                PRÉSENTATION
+              </text>
+            </g>
+
+            <!-- 9. Aiguille Dauphine à facettes (tourne par pas horaires) -->
+            <g id="watch-hour-hand" filter="url(#handShadow)">
+              <polygon points="220,256 213,220 220,66" fill="url(#handFacetLeft)" />
+              <polygon points="220,256 227,220 220,66" fill="url(#handFacetRight)" />
+              <line x1="220" y1="158" x2="220" y2="84" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.85" />
+            </g>
+
+            <!-- 10. Chapeau central de l'axe des aiguilles -->
+            <circle cx="220" cy="220" r="13" fill="url(#goldBevel)" stroke="#070b14" stroke-width="2" />
+            <circle cx="220" cy="220" r="5" fill="#070b14" />
+            <circle cx="220" cy="220" r="2" fill="#f3e5ab" />
+          </svg>
+        </div>
+
+        <!-- =================================================================
+             INDICATEUR D'HEURE & RÉSERVE DE MARCHE (%) + BOUTONS FIXES 46PX
+             ================================================================= -->
+        <div class="mt-4 w-full max-w-[400px] space-y-2.5">
+          <!-- Barre de statut horloger : Heure courante & Réserve de marche en % -->
+          <div class="flex items-center justify-between px-4 py-2 rounded-xl bg-horology-surface border border-horology-border font-mono text-xs">
+            <span class="text-horology-steelMuted">
+              Position : <strong id="controls-step-badge" class="text-horology-gold font-bold">00 / 11h</strong>
+            </span>
+            <span class="text-horology-steelMuted">
+              Réserve : <strong id="controls-reserve-badge" class="text-horology-goldLight font-bold">0%</strong>
+            </span>
+          </div>
+
+          <!-- Grille 2 colonnes égales (1fr / 1fr) à hauteur fixe (46px) -->
+          <div class="grid grid-cols-2 gap-3 w-full">
+            <button
+              id="btn-prev-hour"
+              type="button"
+              aria-label="Heure précédente"
+              class="watch-nav-btn w-full px-3 rounded-2xl bg-horology-surface hover:bg-horology-card disabled:opacity-40 disabled:cursor-not-allowed border border-horology-border hover:border-horology-gold/60 text-horology-steel hover:text-white font-semibold text-xs sm:text-sm inline-flex items-center justify-center transition-colors active:scale-95"
+            >
+              ← Précédent
+            </button>
+
+            <button
+              id="btn-next-hour"
+              type="button"
+              aria-label="Heure suivante"
+              class="watch-nav-btn w-full px-3 rounded-2xl bg-gradient-to-r from-horology-gold to-amber-500 hover:from-horology-goldLight hover:to-horology-gold text-horology-bg font-bold text-xs sm:text-sm inline-flex items-center justify-center shadow-gold-glow transition-all active:scale-95"
+            >
+              <span id="btn-next-label">Démarrer · 01h →</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Barre de repères rapides (00 à 11) -->
+        <div class="mt-3.5 w-full max-w-[400px] flex flex-col items-center gap-1.5">
+          <div id="mini-hours-bar" class="flex items-center justify-center flex-wrap gap-1.5" aria-label="Accès rapide aux heures">
+            <!-- Généré dynamiquement en JS (00 à 11) -->
+          </div>
+          <p class="text-[11px] font-mono text-horology-steelMuted text-center">
+            Cliquez sur une heure du cadran, utilisez les flèches ← → ou glissez sur mobile
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           COLONNE DROITE : PANNEAU DYNAMIQUE DE LA RUBRIQUE ACTIVE
+           =================================================================== -->
+      <section aria-live="polite" class="lg:col-span-7 w-full">
+        <article
+          id="stage-content-card"
+          class="w-full rounded-3xl bg-horology-surface/95 border border-horology-border/90 p-5 sm:p-7 lg:p-8 shadow-watch backdrop-blur-sm"
+        >
+          <div id="stage-dynamic-body"></div>
+        </article>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =====================================================================
+       VISIONNEUSE LIGHTBOX PLEIN ÉCRAN POUR LES GALERIES PROJETS (04H – 09H)
+       ===================================================================== -->
+  <div
+    id="gallery-lightbox"
+    class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-caption"
+  >
+    <div class="relative w-full max-w-4xl rounded-3xl bg-horology-surface border border-horology-gold/50 shadow-watch overflow-hidden flex flex-col">
+      <!-- Barre supérieure Lightbox -->
+      <div class="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-horology-border bg-horology-bg/90">
+        <span id="lightbox-counter" class="font-mono text-xs text-horology-gold font-bold">1 / 3</span>
+        <button
+          id="lightbox-close-btn"
+          type="button"
+          class="px-3 py-1.5 rounded-xl bg-horology-card hover:bg-horology-gold hover:text-horology-bg text-xs font-mono font-semibold text-white transition-colors"
+        >
+          Fermer ✕
+        </button>
+      </div>
+
+      <!-- Zone d'affichage grand format -->
+      <div class="relative w-full aspect-video bg-horology-bg flex items-center justify-center overflow-hidden">
+        <img id="lightbox-img" src="" alt="" class="w-full h-full object-contain hidden" />
+        <div id="lightbox-svg-holder" class="w-full h-full flex items-center justify-center"></div>
+
+        <!-- Boutons précédent / suivant dans la Lightbox -->
+        <button
+          id="lightbox-prev-btn"
+          type="button"
+          aria-label="Image précédente"
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-horology-bg/85 hover:bg-horology-gold text-white hover:text-horology-bg border border-horology-gold/40 flex items-center justify-center font-bold transition-colors"
+        >
+          ←
+        </button>
+        <button
+          id="lightbox-next-btn"
+          type="button"
+          aria-label="Image suivante"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-horology-bg/85 hover:bg-horology-gold text-white hover:text-horology-bg border border-horology-gold/40 flex items-center justify-center font-bold transition-colors"
+        >
+          →
+        </button>
+      </div>
+
+      <!-- Légende détaillée -->
+      <div class="px-4 sm:px-6 py-3.5 bg-horology-surface border-t border-horology-border">
+        <p id="lightbox-caption" class="text-xs sm:text-sm text-slate-200 font-medium"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       NOTIFICATION TOAST NON BLOQUANTE (COPIE PRESSE-PAPIERS / APERÇU LOCAL)
+       ===================================================================== -->
+  <div
+    id="toast-notification"
+    role="status"
+    aria-live="polite"
+    class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300 max-w-sm rounded-2xl bg-horology-card border border-horology-gold/60 px-4 py-3 shadow-watch text-xs sm:text-sm text-white flex items-center gap-2.5"
+  >
+    <span class="w-2.5 h-2.5 rounded-full bg-horology-gold shrink-0"></span>
+    <span id="toast-message">Action effectuée</span>
+  </div>
+
+  <!-- =====================================================================
+       PIED DE PAGE
+       ===================================================================== -->
+  <footer class="w-full border-t border-horology-border/60 py-4 text-center text-xs font-mono text-horology-steelMuted no-print">
+    <span>© <span id="footer-year"></span> Borys Lucjanek — Portfolio de compétences • INP SIGMA Clermont</span>
+  </footer>
+
+  <!-- =====================================================================
+       LOGIQUE INTERACTIVE : CADRAN HORLOGER, GALERIES & 11 RUBRIQUES + CONTACT
+       ===================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const footerYearEl = document.getElementById('footer-year');
+      if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+
+      // Stockage en mémoire des aperçus locaux (photo portrait & photos de projets)
+      const localImageOverrides = {};
+
+      // =====================================================================
+      // 1. SCHÉMAS TECHNIQUES SVG BLUEPRINT POUR LES GALERIES (04H À 09H)
+      // =====================================================================
+      const BLUEPRINT_SVGS = {
+        sigma_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 72H640M0 144H640M0 216H640M0 288H640M128 0V360M256 0V360M384 0V360M512 0V360"/></g>
+            <!-- Silhouette architecturale stylisée INP SIGMA Clermont -->
+            <g transform="translate(115, 78)">
+              <rect x="0" y="75" width="410" height="125" rx="8" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
+              <rect x="28" y="38" width="165" height="162" rx="6" fill="#131e32" stroke="#38bdf8" stroke-width="1.8"/>
+              <g stroke="#d4af37" stroke-width="1.2" opacity="0.75">
+                <line x1="48" y1="62" x2="173" y2="62"/><line x1="48" y1="88" x2="173" y2="88"/>
+                <line x1="48" y1="114" x2="173" y2="114"/><line x1="48" y1="140" x2="173" y2="140"/>
+                <line x1="215" y1="102" x2="385" y2="102"/><line x1="215" y1="130" x2="385" y2="130"/>
+                <line x1="215" y1="158" x2="385" y2="158"/>
+              </g>
+              <text x="205" y="22" text-anchor="middle" fill="#f3e5ab" font-family="Playfair Display, serif" font-size="16" font-weight="700" letter-spacing="1.5">INP SIGMA CLERMONT • CAMPUS DES CÉZEAUX</text>
+              <text x="205" y="224" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="10.5">Génie Mécanique &amp; Matériaux Innovants et Durables (MID)</text>
+            </g>
+          </svg>`,
+        safran_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 72H640M0 144H640M0 216H640M0 288H640M128 0V360M256 0V360M384 0V360M512 0V360"/></g>
+            <!-- Zone optimale 40-60 éprouvettes -->
+            <rect x="200" y="65" width="90" height="225" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1" stroke-dasharray="4 3"/>
+            <!-- Axes -->
+            <line x1="80" y1="290" x2="575" y2="290" stroke="#475569" stroke-width="2"/>
+            <line x1="80" y1="65" x2="80" y2="290" stroke="#475569" stroke-width="2"/>
+            <!-- Seuil de précision 1 % -->
+            <line x1="80" y1="242" x2="575" y2="242" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="6 4"/>
+            <!-- Courbe Monte-Carlo lissée (150 tirages indépendants) -->
+            <polyline points="110,145 135,178 160,188 185,196 225,222 255,220 290,228 360,232 430,247 545,250" fill="none" stroke="#38bdf8" stroke-width="2.6"/>
+            <g fill="#d4af37">
+              <circle cx="110" cy="145" r="4.5"/><circle cx="135" cy="178" r="4.5"/><circle cx="160" cy="188" r="4.5"/>
+              <circle cx="185" cy="196" r="4.5"/><circle cx="225" cy="222" r="4.5"/><circle cx="255" cy="220" r="4.5"/>
+              <circle cx="290" cy="228" r="4.5"/><circle cx="360" cy="232" r="4.5"/><circle cx="430" cy="247" r="4.5"/><circle cx="545" cy="250" r="4.5"/>
+            </g>
+            <text x="85" y="45" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">SAFRAN • SENSIBILITÉ PROBIT (S_50% = 500,79 MPa) — MONTE-CARLO (150 TIRAGES)</text>
+            <text x="395" y="234" fill="#ef4444" font-family="JetBrains Mono, monospace" font-size="9.5">Seuil précision 1 %</text>
+            <text x="206" y="82" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="9">Optimum 40–60</text>
+            <text x="255" y="322" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="10">Nombre total d'éprouvettes testées (5 paliers : 440 à 560 MPa)</text>
+          </svg>`,
+        safran_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 90H640M0 180H640M0 270H640M160 0V360M320 0V360M480 0V360"/></g>
+            <!-- Bande optimale d dans [20, 40] MPa -->
+            <rect x="175" y="65" width="115" height="225" fill="rgba(16,185,129,0.14)" stroke="#10b981" stroke-width="1.2"/>
+            <line x1="85" y1="290" x2="565" y2="290" stroke="#475569" stroke-width="2"/>
+            <line x1="85" y1="65" x2="85" y2="290" stroke="#475569" stroke-width="2"/>
+            <!-- Courbe d'erreur relative sur sigma = 1/b -->
+            <polyline points="118,80 132,175 175,240 232,258 290,261 345,252 400,249 485,239 545,250" fill="none" stroke="#ef4444" stroke-width="2.6"/>
+            <g fill="#f3e5ab">
+              <circle cx="132" cy="175" r="4"/><circle cx="175" cy="240" r="4"/><circle cx="232" cy="258" r="4.5"/>
+              <circle cx="290" cy="261" r="4.5"/><circle cx="345" cy="252" r="4"/><circle cx="485" cy="239" r="4"/><circle cx="545" cy="250" r="4"/>
+            </g>
+            <text x="85" y="45" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">IMPACT DU PAS DE CONTRAINTE d SUR LA DISPERSION σ = 1/b (ISO 12107)</text>
+            <text x="182" y="86" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700">Zone optimale d ∈ [20, 40] MPa</text>
+            <text x="182" y="102" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="9">0,5 ≤ d/σ ≤ 2,0 (Erreur σ ~ 20%)</text>
+            <text x="230" y="322" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="10">Pas entre paliers de contrainte d [MPa] (50 éprouvettes)</text>
+          </svg>`,
+        safran_3: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <!-- Panneau gauche : Régression Probit -->
+            <rect x="45" y="65" width="265" height="225" rx="10" fill="#0e1625" stroke="#20304a"/>
+            <line x1="65" y1="180" x2="290" y2="180" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <line x1="178" y1="80" x2="178" y2="275" stroke="#10b981" stroke-width="1.4" stroke-dasharray="3 3"/>
+            <line x1="75" y1="262" x2="280" y2="95" stroke="#38bdf8" stroke-width="2.4"/>
+            <g fill="#ef4444">
+              <circle cx="95" cy="242" r="4"/><circle cx="130" cy="222" r="4"/><circle cx="155" cy="198" r="4"/>
+              <circle cx="176" cy="182" r="4"/><circle cx="205" cy="158" r="4"/><circle cx="235" cy="132" r="4"/><circle cx="268" cy="102" r="4"/>
+            </g>
+            <text x="62" y="88" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">RÉGRESSION ML PROBIT &amp; SIGMOÏDE</text>
+            <!-- Panneau droit : Synthèse NBS Handbook 91 & Finney -->
+            <rect x="330" y="65" width="265" height="225" rx="10" fill="#0e1625" stroke="#d4af37" stroke-width="1.4"/>
+            <text x="348" y="92" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700">VALIDATION STATISTIQUE PYTHON</text>
+            <text x="348" y="118" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="9.5">• NBS Handbook 91 (Y = -4,62 + 6,66x)</text>
+            <text x="356" y="136" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="9.5">ED50 = 27,801 V | IC95% [24,86 ; 31,09]</text>
+            <text x="356" y="154" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="9.5">χ² = 2,153 (p = 0,9888) • Kärber = 27,801 V</text>
+            <text x="348" y="184" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="9.5">• Finney 1952 (Y = 2,34 + 3,76x)</text>
+            <text x="356" y="202" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="9.5">ED50 = 5,113 mg/L | χ² = 0,616 (p = 0,893)</text>
+            <text x="348" y="236" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="9.5">• Perspective : marges sur essais limités</text>
+            <text x="356" y="254" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9">(Perrin et al., Structural Safety, 2026)</text>
+          </svg>`,
+
+        icimb_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1">
+              <path d="M0 60H640M0 120H640M0 180H640M0 240H640M0 300H640M80 0V360M160 0V360M240 0V360M320 0V360M400 0V360M480 0V360M560 0V360"/>
+            </g>
+            <g transform="translate(135, 85)" stroke="#d4af37" fill="rgba(212,175,55,0.08)" stroke-width="2">
+              <polygon points="60,10 110,38 110,94 60,122 10,94 10,38"/>
+              <polygon points="160,10 210,38 210,94 160,122 110,94 110,38"/>
+              <polygon points="110,94 160,122 160,178 110,206 60,178 60,122"/>
+              <circle cx="60" cy="66" r="18" stroke="#38bdf8" fill="rgba(56,189,248,0.12)"/>
+              <circle cx="160" cy="66" r="18" stroke="#38bdf8" fill="rgba(56,189,248,0.12)"/>
+              <circle cx="110" cy="150" r="18" stroke="#d4af37" fill="rgba(212,175,55,0.2)"/>
+            </g>
+            <g transform="translate(390, 105)">
+              <rect x="0" y="0" width="175" height="150" rx="10" fill="#0e1625" stroke="#20304a"/>
+              <text x="16" y="28" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">ICIMB • R&amp;D CÉRAMIQUE</text>
+              <text x="16" y="52" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="10">Stockage thermique</text>
+              <text x="16" y="72" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9.5">• Matières issues déchets</text>
+              <text x="16" y="92" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="9.5">• Géométrie alvéolaire</text>
+              <text x="16" y="112" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="9.5">• Production de masse</text>
+            </g>
+          </svg>`,
+        icimb_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 90H640M0 180H640M0 270H640M160 0V360M320 0V360M480 0V360"/></g>
+            <polyline points="60,260 120,258 145,140 165,255 215,254 240,95 262,252 315,255 345,165 370,256 440,255 470,120 495,255 580,258" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+            <polyline points="60,210 190,205 280,175 410,160 580,145" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 4"/>
+            <text x="60" y="55" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">CARACTÉRISATION PHYSICO-CHIMIQUE : BET • DRX • ATG-ATD • DSC</text>
+            <text x="60" y="300" fill="#94a3b8" font-family="JetBrains Mono, monospace" font-size="11">Analyse cristallographique, surface spécifique &amp; stabilité thermique</text>
+          </svg>`,
+        icimb_3: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <circle cx="210" cy="180" r="105" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
+            <circle cx="210" cy="180" r="78" fill="none" stroke="#38bdf8" stroke-width="1" stroke-dasharray="4 3"/>
+            <g fill="rgba(212,175,55,0.18)" stroke="#f3e5ab" stroke-width="1.3">
+              <polygon points="175,140 215,130 230,165 190,180"/>
+              <polygon points="215,130 255,150 245,190 230,165"/>
+              <polygon points="165,180 190,180 210,220 175,215"/>
+              <polygon points="190,180 230,165 250,210 210,220"/>
+            </g>
+            <g transform="translate(350, 100)">
+              <text x="0" y="20" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">MICROSCOPIE &amp; ESSAIS MÉCANIQUES</text>
+              <text x="0" y="55" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Imagerie MEB &amp; STEM</text>
+              <text x="0" y="82" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Résilience : Mouton de Charpy</text>
+              <text x="0" y="109" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Certification matériaux clients</text>
+            </g>
+          </svg>`,
+
+        phimeca_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 72H640M0 144H640M0 216H640M0 288H640M128 0V360M256 0V360M384 0V360M512 0V360"/></g>
+            <g stroke="#38bdf8" stroke-width="1.3" opacity="0.65">
+              <line x1="130" y1="110" x2="260" y2="90"/><line x1="130" y1="110" x2="260" y2="180"/><line x1="130" y1="110" x2="260" y2="270"/>
+              <line x1="130" y1="250" x2="260" y2="90"/><line x1="130" y1="250" x2="260" y2="180"/><line x1="130" y1="250" x2="260" y2="270"/>
+              <line x1="260" y1="90" x2="390" y2="180"/><line x1="260" y1="180" x2="390" y2="180"/><line x1="260" y1="270" x2="390" y2="180"/>
+            </g>
+            <circle cx="130" cy="110" r="14" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
+            <circle cx="130" cy="250" r="14" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
+            <circle cx="260" cy="90" r="14" fill="#0e1625" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="260" cy="180" r="14" fill="#0e1625" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="260" cy="270" r="14" fill="#0e1625" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="390" cy="180" r="18" fill="#131e32" stroke="#d4af37" stroke-width="2.5"/>
+            <text x="430" y="168" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">PHIMECA • ML MATÉRIAUX</text>
+            <text x="430" y="190" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="10.5">CNN • SVR • XGBoost</text>
+            <text x="430" y="210" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="10.5">Optimisation inverse</text>
+          </svg>`,
+        phimeca_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <line x1="90" y1="290" x2="560" y2="290" stroke="#475569" stroke-width="2"/>
+            <line x1="90" y1="60" x2="90" y2="290" stroke="#475569" stroke-width="2"/>
+            <path d="M130 95 Q 230 220, 510 265" fill="none" stroke="#d4af37" stroke-width="3"/>
+            <circle cx="150" cy="118" r="6" fill="#d4af37"/><circle cx="215" cy="182" r="6" fill="#d4af37"/>
+            <circle cx="305" cy="226" r="7" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5"/>
+            <circle cx="420" cy="252" r="6" fill="#d4af37"/>
+            <text x="115" y="48" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="700">OPTIMISATION BAYÉSIENNE &amp; GÉNÉTIQUE — PROPRIÉTÉS CIBLES</text>
+          </svg>`,
+        phimeca_3: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="80" y="70" width="480" height="220" rx="14" fill="#0e1625" stroke="#20304a"/>
+            <text x="110" y="115" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">PIPELINE DE DESIGN INVERSE (PYTHON)</text>
+            <text x="110" y="150" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">1. Entraînement méta-modèles : CNN / SVR / XGBoost</text>
+            <text x="110" y="180" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">2. Exploration bayésienne &amp; algorithme génétique</text>
+            <text x="110" y="210" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">3. Identification des descripteurs matériaux optimaux</text>
+          </svg>`,
+
+        mecaloc_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <g stroke="#1e293b" stroke-width="1"><path d="M0 90H640M0 180H640M0 270H640M160 0V360M320 0V360M480 0V360"/></g>
+            <g transform="translate(150, 75)" stroke="#d4af37" fill="none" stroke-width="2.2">
+              <rect x="35" y="10" width="90" height="28" rx="6" fill="rgba(212,175,55,0.12)"/>
+              <rect x="55" y="38" width="50" height="95" rx="4" fill="rgba(56,189,248,0.1)" stroke="#38bdf8"/>
+              <polygon points="72,133 88,133 83,205 77,205" fill="rgba(212,175,55,0.2)"/>
+            </g>
+            <g transform="translate(320, 105)">
+              <text x="0" y="20" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">MECALOC TP • MAINTENANCE ATELIER</text>
+              <text x="0" y="52" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Marteaux-piqueurs &amp; pilonneuses</text>
+              <text x="0" y="78" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Plaques vibrantes de chantier</text>
+              <text x="0" y="104" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Diagnostic mécanique &amp; remise en état</text>
+            </g>
+          </svg>`,
+        mecaloc_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="145" y="65" width="76" height="195" rx="14" fill="#0e1625" stroke="#d4af37" stroke-width="2"/>
+            <circle cx="183" cy="108" r="18" fill="rgba(239,68,68,0.25)" stroke="#ef4444" stroke-width="2"/>
+            <circle cx="183" cy="162" r="18" fill="rgba(245,158,11,0.25)" stroke="#f59e0b" stroke-width="2"/>
+            <circle cx="183" cy="216" r="18" fill="rgba(16,185,129,0.25)" stroke="#10b981" stroke-width="2"/>
+            <g transform="translate(275, 110)">
+              <text x="0" y="20" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">SIGNALISATION &amp; ÉNERGIE</text>
+              <text x="0" y="52" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Révision jeux de feux tricolores</text>
+              <text x="0" y="78" fill="#f1f5f9" font-family="JetBrains Mono, monospace" font-size="11">• Contrôle &amp; remplacement batteries</text>
+              <text x="0" y="104" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Fiabilisation matériel de location</text>
+            </g>
+          </svg>`,
+        mecaloc_3: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="85" y="75" width="470" height="210" rx="14" fill="#0e1625" stroke="#20304a"/>
+            <text x="115" y="120" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">FINITION, PROTECTION &amp; CONTRÔLE</text>
+            <text x="115" y="155" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Préparation de surfaces &amp; peinture industrielle</text>
+            <text x="115" y="185" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Essais fonctionnels avant remise en location</text>
+            <text x="115" y="215" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Stage ouvrier 1re année • Juillet 2025</text>
+          </svg>`,
+
+        volley_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="120" y="75" width="400" height="210" rx="6" fill="#0e1625" stroke="#d4af37" stroke-width="2.2"/>
+            <line x1="320" y1="65" x2="320" y2="295" stroke="#f3e5ab" stroke-width="3"/>
+            <line x1="255" y1="75" x2="255" y2="285" stroke="#38bdf8" stroke-width="1.4" stroke-dasharray="5 4"/>
+            <line x1="385" y1="75" x2="385" y2="285" stroke="#38bdf8" stroke-width="1.4" stroke-dasharray="5 4"/>
+            <circle cx="185" cy="125" r="11" fill="#d4af37"/><circle cx="185" cy="235" r="11" fill="#d4af37"/>
+            <circle cx="285" cy="180" r="11" fill="#38bdf8"/>
+            <text x="120" y="55" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="12.5" font-weight="700">COACH &amp; CAPITAINE — ÉQUIPE VOLLEY-BALL SIGMA CLERMONT</text>
+          </svg>`,
+        volley_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="85" y="75" width="470" height="210" rx="14" fill="#0e1625" stroke="#20304a"/>
+            <text x="115" y="120" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">ENTRAÎNEMENTS &amp; COMPÉTITIONS UNIVERSITAIRES</text>
+            <text x="115" y="155" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Planification et animation des séances hebdomadaires</text>
+            <text x="115" y="185" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Capitaine d'équipe en championnat universitaire</text>
+            <text x="115" y="215" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Cohésion collective, gestion tactique &amp; leadership</text>
+          </svg>`,
+
+        asso_1: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <circle cx="320" cy="165" r="78" fill="#0e1625" stroke="#d4af37" stroke-width="2.2"/>
+            <text x="320" y="160" text-anchor="middle" fill="#f3e5ab" font-family="Playfair Display, serif" font-size="22" font-weight="700">FizZteam</text>
+            <text x="320" y="184" text-anchor="middle" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="10">FOYER SIGMA CLERMONT</text>
+            <text x="320" y="285" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">Animation du foyer de l'école &amp; événements étudiants</text>
+          </svg>`,
+        asso_2: `
+          <svg viewBox="0 0 640 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <rect width="640" height="360" fill="#070b14"/>
+            <rect x="85" y="75" width="470" height="210" rx="14" fill="#0e1625" stroke="#d4af37" stroke-width="1.8"/>
+            <text x="115" y="120" fill="#d4af37" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">RESPONSABLE PARTENARIATS — REMISE DES DIPLÔMES</text>
+            <text x="115" y="155" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Prospection &amp; relations entreprises partenaires</text>
+            <text x="115" y="185" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="11">• Négociation des financements &amp; dotations</text>
+            <text x="115" y="215" fill="#38bdf8" font-family="JetBrains Mono, monospace" font-size="11">• Organisation de la cérémonie officielle SIGMA Clermont</text>
+          </svg>`
+      };
+
+      // =====================================================================
+      // 2. DONNÉES DES GALERIES VISUELLES POUR LES RUBRIQUES (03H À 09H)
+      // =====================================================================
+      const GALLERIES_BY_STEP = {
+        3: {
+          title: 'Campus • INP SIGMA Clermont',
+          items: [
+            {
+              src: 'assets/sigma.jpg',
+              caption: 'INP SIGMA Clermont — École d’ingénieurs en mécanique et chimie (Clermont-Ferrand)',
+              svgKey: 'sigma_1'
+            }
+          ]
+        },
+        4: {
+          title: 'Galerie du dossier • Safran Transmission Systems',
+          items: [
+            {
+              src: 'assets/safran_1.jpg',
+              caption: 'Sensibilité de l’estimation Probit (S_50% = 500,79 MPa) au nombre d’éprouvettes — Simulation Monte-Carlo (150 tirages)',
+              svgKey: 'safran_1'
+            },
+            {
+              src: 'assets/safran_2.jpg',
+              caption: 'Impact du pas de contrainte d sur la médiane S_50% et la dispersion σ = 1/b — Fenêtre optimale d ∈ [20, 40] MPa (ISO 12107)',
+              svgKey: 'safran_2'
+            },
+            {
+              src: 'assets/safran_3.jpg',
+              caption: 'Régression Maximum de Vraisemblance Probit, courbe sigmoïde et validation sur NBS Handbook 91 & Finney 1952',
+              svgKey: 'safran_3'
+            }
+          ]
+        },
+        5: {
+          title: 'Galerie du dossier • ICIMB Łukasiewicz (Varsovie)',
+          items: [
+            {
+              src: 'assets/icimb_1.jpg',
+              caption: 'Conception de céramiques de stockage thermique à partir de matières premières issues de déchets',
+              svgKey: 'icimb_1'
+            },
+            {
+              src: 'assets/icimb_2.jpg',
+              caption: 'Caractérisation physico-chimique et thermique : BET, DRX, ATG-ATD et DSC',
+              svgKey: 'icimb_2'
+            },
+            {
+              src: 'assets/icimb_3.jpg',
+              caption: 'Analyses microstructurales (MEB, STEM), essais Mouton de Charpy et certification clients',
+              svgKey: 'icimb_3'
+            }
+          ]
+        },
+        6: {
+          title: 'Galerie du dossier • Projet Industriel PHIMECA',
+          items: [
+            {
+              src: 'assets/phimeca_1.jpg',
+              caption: 'Architecture prédictive Machine Learning (CNN, SVR, XGBoost) pour les propriétés matériaux',
+              svgKey: 'phimeca_1'
+            },
+            {
+              src: 'assets/phimeca_2.jpg',
+              caption: 'Optimisation bayésienne et génétique pour le design inverse de matériaux cibles',
+              svgKey: 'phimeca_2'
+            },
+            {
+              src: 'assets/phimeca_3.jpg',
+              caption: 'Pipeline numérique Python développé en partenariat avec PHIMECA',
+              svgKey: 'phimeca_3'
+            }
+          ]
+        },
+        7: {
+          title: 'Galerie du dossier • Stage Ouvrier MECALOC TP',
+          items: [
+            {
+              src: 'assets/mecaloc_1.jpg',
+              caption: 'Maintenance mécanique d’engins TP : marteaux-piqueurs, plaques vibrantes et pilonneuses',
+              svgKey: 'mecaloc_1'
+            },
+            {
+              src: 'assets/mecaloc_2.jpg',
+              caption: 'Diagnostic électrique et remise en service de jeux de feux tricolores et batteries',
+              svgKey: 'mecaloc_2'
+            },
+            {
+              src: 'assets/mecaloc_3.jpg',
+              caption: 'Travaux de peinture, finition et contrôle qualité avant remise en location',
+              svgKey: 'mecaloc_3'
+            }
+          ]
+        },
+        8: {
+          title: 'Galerie du dossier • Équipe de Volley-ball SIGMA Clermont',
+          items: [
+            {
+              src: 'assets/volley_1.jpg',
+              caption: 'Coach et capitaine de l’équipe de volley-ball de l’INP SIGMA Clermont',
+              svgKey: 'volley_1'
+            },
+            {
+              src: 'assets/volley_2.jpg',
+              caption: 'Entraînements hebdomadaires, préparation tactique et compétitions universitaires',
+              svgKey: 'volley_2'
+            }
+          ]
+        },
+        9: {
+          title: 'Galerie du dossier • FizZteam & Remise des Diplômes',
+          items: [
+            {
+              src: 'assets/fizzteam.jpg',
+              caption: 'Membre actif du foyer de l’école — FizZteam (INP SIGMA Clermont)',
+              svgKey: 'asso_1'
+            },
+            {
+              src: 'assets/rdd.jpg',
+              caption: 'Responsable Partenariats de l’association Remise des Diplômes (RDD)',
+              svgKey: 'asso_2'
+            }
+          ]
+        }
+      };
+
+      // Mémorise l'index de vignette actif par rubrique
+      const galleryActiveSlide = { 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+
+      // =====================================================================
+      // 3. COMPOSANTS VISUELS : BADGE LOGO & MODULES DE GALERIE
+      // =====================================================================
+      function renderLogoBadge(src, alt, fallbackMonogram, sizeClasses = 'w-12 h-12') {
+        const resolvedSrc = localImageOverrides[src] || src;
+        return `
+          <div
+            class="${sizeClasses} rounded-xl bg-white/95 border border-horology-gold/50 p-1.5 flex items-center justify-center shrink-0 shadow-sm overflow-hidden"
+            title="${alt} (${src})"
+          >
+            <img
+              src="${resolvedSrc}"
+              alt="${alt}"
+              class="w-full h-full object-contain"
+              onerror="this.style.display='none'; this.parentElement.classList.remove('bg-white/95'); this.parentElement.classList.add('bg-horology-card'); this.nextElementSibling.classList.remove('hidden');"
+            />
+            <span class="hidden font-mono font-extrabold text-[10px] tracking-tight text-horology-goldLight text-center leading-tight">
+              ${fallbackMonogram}
+            </span>
+          </div>
+        `;
+      }
+
+      function renderSinglePhotoCard(stepNumber, itemIndex, labelTitle) {
+        const gallery = GALLERIES_BY_STEP[stepNumber];
+        if (!gallery || !gallery.items[itemIndex]) return '';
+        const item = gallery.items[itemIndex];
+        const resolvedSrc = localImageOverrides[item.src] || item.src;
+
+        return `
+          <div class="mt-3 pt-3 border-t border-horology-border/70 space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-1.5">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-horology-gold font-semibold">
+                ${labelTitle}
+              </span>
+              <span class="font-mono text-[10px] text-horology-steelMuted">
+                <code class="text-horology-goldLight">${item.src}</code>
+              </span>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden border border-horology-border bg-horology-bg aspect-[16/9]">
+              <img
+                src="${resolvedSrc}"
+                alt="${item.caption}"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+              />
+              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
+
+              <div class="absolute top-2 right-2 flex items-center gap-1.5">
+                <label
+                  class="cursor-pointer px-2 py-1 rounded-lg bg-horology-bg/90 hover:bg-horology-card border border-horology-gold/40 text-[10px] font-mono text-horology-goldLight transition-colors backdrop-blur-sm"
+                  title="Tester une photo depuis votre ordinateur"
+                >
+                  <span>Aperçu local</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    data-target-src="${item.src}"
+                    class="gallery-local-input hidden"
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  data-lightbox-step="${stepNumber}"
+                  data-lightbox-index="${itemIndex}"
+                  class="gallery-open-lightbox-btn px-2 py-1 rounded-lg bg-horology-gold text-horology-bg hover:bg-horology-goldLight text-[10px] font-mono font-bold transition-colors shadow"
+                  title="Agrandir en plein écran"
+                >
+                  Agrandir ⤢
+                </button>
+              </div>
+
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent px-3 py-2">
+                <p class="text-[11px] text-slate-100 leading-snug">${item.caption}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderGalleryModule(stepNumber) {
+        const gallery = GALLERIES_BY_STEP[stepNumber];
+        if (!gallery) return '';
+
+        const totalItems = gallery.items.length;
+        const activeIndex = Math.min(galleryActiveSlide[stepNumber] || 0, totalItems - 1);
+        const activeItem = gallery.items[activeIndex];
+        const resolvedActiveSrc = localImageOverrides[activeItem.src] || activeItem.src;
+
+        const gridColsClass = totalItems === 2 ? 'grid-cols-2' : 'grid-cols-3';
+
+        const thumbnailsHtml = totalItems > 1
+          ? `<div class="grid ${gridColsClass} gap-2.5">` +
+            gallery.items.map((item, idx) => {
+              const isSelected = idx === activeIndex;
+              const thumbSrc = localImageOverrides[item.src] || item.src;
+              return `
+                <button
+                  type="button"
+                  data-gallery-step="${stepNumber}"
+                  data-gallery-index="${idx}"
+                  class="gallery-thumb-btn relative rounded-xl overflow-hidden aspect-video border-2 transition-all text-left group ${
+                    isSelected
+                      ? 'border-horology-gold shadow-gold-glow scale-[1.01]'
+                      : 'border-horology-border/80 opacity-80 hover:opacity-100 hover:border-horology-gold/50'
+                  }"
+                  title="Afficher le visuel ${idx + 1}"
+                >
+                  <img
+                    src="${thumbSrc}"
+                    alt="${item.caption}"
+                    class="w-full h-full object-cover"
+                    onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                  />
+                  <div class="hidden w-full h-full">${BLUEPRINT_SVGS[item.svgKey]}</div>
+                  <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-horology-bg/85 text-[9px] font-mono text-horology-goldLight">
+                    0${idx + 1}
+                  </span>
+                </button>
+              `;
+            }).join('') +
+            `</div>`
+          : '';
+
+        return `
+          <div class="mt-5 pt-4 border-t border-horology-border/80 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-horology-gold font-semibold">
+                ${gallery.title}
+              </span>
+              <span class="font-mono text-[11px] text-horology-steelMuted">
+                Fichier : <code class="text-horology-goldLight">${activeItem.src}</code>
+              </span>
+            </div>
+
+            <!-- Cadre visuel principal -->
+            <div class="relative rounded-2xl overflow-hidden border border-horology-border bg-horology-bg aspect-[16/9] group">
+              <img
+                src="${resolvedActiveSrc}"
+                alt="${activeItem.caption}"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+              />
+              <div class="hidden w-full h-full">${BLUEPRINT_SVGS[activeItem.svgKey]}</div>
+
+              <!-- Barre d'outils flottante (Agrandir + Aperçu photo locale) -->
+              <div class="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+                <label
+                  class="cursor-pointer px-2.5 py-1.5 rounded-xl bg-horology-bg/90 hover:bg-horology-card border border-horology-gold/40 text-[11px] font-mono text-horology-goldLight transition-colors backdrop-blur-sm"
+                  title="Tester une photo depuis votre ordinateur"
+                >
+                  <span>Aperçu photo locale</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    data-target-src="${activeItem.src}"
+                    class="gallery-local-input hidden"
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  data-lightbox-step="${stepNumber}"
+                  data-lightbox-index="${activeIndex}"
+                  class="gallery-open-lightbox-btn px-2.5 py-1.5 rounded-xl bg-horology-gold text-horology-bg hover:bg-horology-goldLight text-[11px] font-mono font-bold transition-colors shadow"
+                  title="Agrandir en plein écran"
+                >
+                  Agrandir ⤢
+                </button>
+              </div>
+
+              <!-- Bandeau légende bas -->
+              <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent px-3.5 py-2.5">
+                <p class="text-xs text-slate-100 leading-snug">${activeItem.caption}</p>
+              </div>
+            </div>
+
+            <!-- Vignettes de sélection (si plusieurs photos) -->
+            ${thumbnailsHtml}
+          </div>
+        `;
+      }
+
+      // =====================================================================
+      // 4. BASE DE DONNÉES DES 12 POSITIONS DU CADRAN (00H À 11H, RETOUR 12H=00H)
+      // =====================================================================
+      const PORTFOLIO_STEPS = [
+        // -------------------------------------------------------------------
+        // 00H (INDEX 12) — PRÉSENTATION & PROFIL (GRAND PORTRAIT)
+        // -------------------------------------------------------------------
+        {
+          step: 0,
+          hourLabel: '00H',
+          shortTitle: 'PRÉSENTATION',
+          kicker: 'Position de départ • 00h (Index 12)',
+          title: 'Borys Lucjanek',
+          subtitle: 'Étudiant en dernière année d’école d’ingénieur à l’INP SIGMA Clermont — Spécialité Matériaux Innovants et Durables (MID)',
+          render: () => {
+            const portraitSrc = localImageOverrides['assets/photo.jpg'] || 'assets/photo.jpg';
+            return `
+              <div class="space-y-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-stretch gap-6">
+                  
+                  <!-- Grand cadre portrait horloger (~230x270px) -->
+                  <div class="flex flex-col items-center shrink-0">
+                    <div class="relative w-[220px] h-[260px] sm:w-[230px] sm:h-[270px] rounded-2xl p-1.5 bg-gradient-to-br from-horology-goldLight via-horology-gold to-horology-goldDark shadow-watch">
+                      <div class="relative w-full h-full rounded-xl overflow-hidden bg-horology-bg flex items-center justify-center">
+                        <img
+                          id="hero-portrait-img"
+                          src="${portraitSrc}"
+                          alt="Portrait de Borys Lucjanek"
+                          class="w-full h-full object-cover"
+                          onerror="this.style.display='none'; document.getElementById('hero-portrait-fallback').classList.remove('hidden');"
+                        />
+                        <!-- Repli élégant monogramme BL -->
+                        <div id="hero-portrait-fallback" class="hidden w-full h-full bg-gradient-to-b from-horology-card to-horology-bg flex flex-col items-center justify-center p-4 text-center">
+                          <div class="w-20 h-20 rounded-full border-2 border-horology-gold/70 bg-horology-bg/90 flex items-center justify-center mb-3 shadow-gold-glow">
+                            <span class="font-serif text-3xl font-bold text-horology-gold">BL</span>
+                          </div>
+                          <svg class="w-16 h-12 text-horology-steelMuted/50 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                          </svg>
+                          <span class="font-mono text-[10px] text-horology-goldLight">assets/photo.jpg</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Bouton discret pour tester une photo locale -->
+                    <label
+                      class="mt-2.5 cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-horology-card hover:border-horology-gold border border-horology-border text-[11px] font-mono text-horology-goldLight transition-colors"
+                      title="Prévisualiser une photo depuis votre ordinateur"
+                    >
+                      <svg class="w-3.5 h-3.5 text-horology-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span>Tester une photo</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        data-target-src="assets/photo.jpg"
+                        class="gallery-local-input hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <!-- Informations d'identité & profil ingénieur -->
+                  <div class="flex-1 flex flex-col justify-between text-center sm:text-left space-y-4">
+                    <div class="space-y-2.5">
+                      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-horology-gold/15 border border-horology-gold/40 text-horology-goldLight font-mono text-xs">
+                        <span class="w-2 h-2 rounded-full bg-horology-gold animate-pulse"></span>
+                        <span>22 ans • Clermont-Ferrand</span>
+                      </div>
+
+                      <p class="text-sm sm:text-base text-slate-200 leading-relaxed">
+                        Étudiant en <strong class="text-white">dernière année d’école d’ingénieur</strong> à l’<strong class="text-horology-goldLight">INP SIGMA Clermont</strong> (Spécialité <strong class="text-white">Matériaux Innovants et Durables</strong>), je développe une double expertise en <strong class="text-horology-goldLight">sciences des matériaux</strong> et en <strong class="text-white">ingénierie mécanique</strong>.
+                      </p>
+
+                      <p class="text-xs sm:text-sm text-horology-steelMuted leading-relaxed">
+                        Profil trilingue (<strong class="text-white">Français</strong>, <strong class="text-white">Polonais</strong>, <strong class="text-white">Anglais C1</strong>) combinant caractérisation physico-chimique des matériaux, mécanique des structures, fiabilité en fatigue, simulation CAO/MEF et apprentissage automatique.
+                      </p>
+                    </div>
+
+                    <!-- Coordonnées directes -->
+                    <div class="grid grid-cols-1 gap-2 text-xs font-mono">
+                      <a href="tel:+33664088176" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-white transition-colors">
+                        <span class="text-horology-gold">Tél :</span>
+                        <span>+33 6 64 08 81 76</span>
+                      </a>
+                      <a href="mailto:borys.lucjanek@sigma-clermont.fr" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-white transition-colors truncate">
+                        <span class="text-horology-gold">Mail :</span>
+                        <span class="truncate">borys.lucjanek@sigma-clermont.fr</span>
+                      </a>
+                      <a href="https://www.linkedin.com/in/borys-lucjanek-479b46227/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2 rounded-xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 text-sky-400 transition-colors">
+                        <span class="text-horology-gold">LinkedIn :</span>
+                        <span>linkedin.com/in/borys-lucjanek-479b46227 ↗</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bouton d'action pour démarrer la visite à 01h -->
+                <div class="pt-2 border-t border-horology-border/70 flex flex-wrap items-center justify-between gap-3">
+                  <p class="text-xs font-mono text-horology-steelMuted">
+                    Faites tourner l’aiguille heure par heure pour parcourir mes 11 rubriques.
+                  </p>
+                  <button
+                    type="button"
+                    data-goto-step="1"
+                    class="step-jump-btn inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-horology-gold to-amber-500 hover:from-horology-goldLight hover:to-horology-gold text-horology-bg font-bold text-xs sm:text-sm shadow-gold-glow transition-all active:scale-95"
+                  >
+                    <span>Démarrer la visite · 01h →</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+        },
+
+        // -------------------------------------------------------------------
+        // 01H — COMPÉTENCES TECHNIQUES & LOGICIELS
+        // -------------------------------------------------------------------
+        {
+          step: 1,
+          hourLabel: '01H',
+          shortTitle: 'COMPÉTENCES',
+          kicker: 'Rubrique 01 / 11 • 01h',
+          title: 'Compétences Techniques & Outils Numériques',
+          subtitle: 'Science des matériaux, mécanique des structures, simulation CAO/MEF et science des données',
+          render: () => `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <!-- Matériaux & Caractérisation -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-gold/40 space-y-2">
+                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-horology-gold/15 text-horology-goldLight font-mono text-[11px] font-bold">
+                  Matériaux &amp; Caractérisation
+                </span>
+                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  Matériaux composites, céramiques techniques, éco-conception et valorisation de matières issues de déchets, caractérisation physico-chimique (<span class="font-mono text-white">BET, DRX, ATG-ATD, MEB, STEM, DSC, Charpy</span>).
+                </p>
+              </div>
+
+              <!-- Mécanique & Fiabilité -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-sky-400/35 space-y-2">
+                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-sky-500/15 text-sky-300 font-mono text-[11px] font-bold">
+                  Mécanique &amp; Fiabilité
+                </span>
+                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  Résistance des matériaux (RDM), viscoélasticité linéaire et plasticité, vibrations de structures, modélisation non-linéaire, fatigue à durée de vie infinie (<span class="font-mono text-white">ISO 12107</span>) et incertitudes probabilistes.
+                </p>
+              </div>
+
+              <!-- CAO & Simulation Numérique -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2">
+                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-horology-card text-amber-300 font-mono text-[11px] font-bold">
+                  CFAO &amp; Éléments Finis
+                </span>
+                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  Conception mécanique sous <strong class="text-white">CATIA</strong>, calcul de structures par méthode des éléments finis (MEF) sous <strong class="text-white">ANSYS</strong>, dynamique multicorps sous <strong class="text-white">ADAMS</strong> et suite <strong class="text-white">Pack Office</strong>.
+                </p>
+              </div>
+
+              <!-- Programmation & IA -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-emerald-400/35 space-y-2">
+                <span class="inline-block px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-300 font-mono text-[11px] font-bold">
+                  Programmation &amp; Machine Learning
+                </span>
+                <p class="text-xs sm:text-sm text-horology-steel leading-relaxed">
+                  Développement en <strong class="text-white">Python</strong>, <strong class="text-white">OCaml</strong> et <strong class="text-white">SQL</strong> ; modèles prédictifs (<span class="font-mono text-white">CNN, SVR, XGBoost</span>), simulation Monte-Carlo et optimisation bayésienne / génétique.
+                </p>
+              </div>
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 02H — LANGUES & SAVOIR-ÊTRE
+        // -------------------------------------------------------------------
+        {
+          step: 2,
+          hourLabel: '02H',
+          shortTitle: 'LANGUES & ATOUTS',
+          kicker: 'Rubrique 02 / 11 • 02h',
+          title: 'Langues & Savoir-Être',
+          subtitle: 'Profil trilingue international et qualités humaines développées en environnement académique et industriel',
+          render: () => `
+            <div class="space-y-4">
+              <!-- Maîtrise linguistique -->
+              <div>
+                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold mb-2.5">
+                  Compétences linguistiques
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-gold/50 text-center">
+                    <p class="text-sm font-bold text-white">Français</p>
+                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Langue maternelle</p>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-gold/50 text-center">
+                    <p class="text-sm font-bold text-white">Polonais</p>
+                    <p class="font-mono text-[11px] text-horology-goldLight mt-0.5">Langue maternelle</p>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-sky-400/40 text-center">
+                    <p class="text-sm font-bold text-white">Anglais</p>
+                    <p class="font-mono text-[11px] text-sky-300 mt-0.5">Niveau C1 (Courant)</p>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-horology-bg/90 border border-horology-border text-center">
+                    <p class="text-sm font-bold text-white">Espagnol</p>
+                    <p class="font-mono text-[11px] text-horology-steelMuted mt-0.5">Notions (A1 – A2)</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Savoir-être & Qualités -->
+              <div>
+                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold mb-2.5">
+                  Qualités personnelles &amp; Dynamique collective
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
+                    <p class="text-sm font-bold text-white">Capacité d’analyse &amp; d’adaptation</p>
+                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
+                      Approche rigoureuse des problèmes complexes, confrontation théorie / expérimentation et intégration rapide en milieu international.
+                    </p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
+                    <p class="text-sm font-bold text-white">Créativité &amp; Innovation</p>
+                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
+                      Recherche de solutions techniques originales en formulation de matériaux durables et en conception mécanique.
+                    </p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
+                    <p class="text-sm font-bold text-white">Travail en groupe pluridisciplinaire</p>
+                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
+                      Collaboration fluide entre équipes R&amp;D, partenaires industriels et projets d’ingénierie collectifs.
+                    </p>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-border">
+                    <p class="text-sm font-bold text-white">Leadership &amp; Sens des responsabilités</p>
+                    <p class="text-xs text-horology-steelMuted mt-1 leading-relaxed">
+                      Expérience d’encadrement sportif (coach et capitaine de volley-ball) et de coordination de partenariats associatifs.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 03H — FORMATION ACADÉMIQUE (LOGOS SIGMA & BUFFON + IMAGE SIGMA)
+        // -------------------------------------------------------------------
+        {
+          step: 3,
+          hourLabel: '03H',
+          shortTitle: 'FORMATION',
+          kicker: 'Rubrique 03 / 11 • 03h',
+          title: 'Formation Académique',
+          subtitle: 'INP SIGMA Clermont (Mécanique — Spécialité MID) et CPGE MP* / MPSI au Lycée Buffon (Paris)',
+          render: () => `
+            <div class="relative pl-6 border-l-2 border-horology-gold/60 space-y-5">
+              
+              <!-- INP SIGMA Clermont -->
+              <div class="relative">
+                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-horology-gold ring-4 ring-horology-surface"></span>
+                <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/85 border border-horology-gold/40 space-y-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="space-y-1.5 min-w-0">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">
+                          2024 – 2027
+                        </span>
+                        <span class="font-mono text-xs text-horology-steelMuted">Clermont-Ferrand</span>
+                      </div>
+                      <h3 class="text-lg sm:text-xl font-bold text-white">
+                        INP SIGMA Clermont — Mécanique
+                      </h3>
+                    </div>
+                    ${renderLogoBadge('assets/logo_sigma.png', 'Logo INP SIGMA Clermont', 'SIGMA', 'w-14 h-14')}
+                  </div>
+
+                  <div class="space-y-2.5">
+                    <div class="p-3.5 rounded-xl bg-horology-card border border-horology-gold/30">
+                      <p class="font-mono text-xs text-horology-gold font-bold">
+                        Troisième année — Spécialité Matériaux Innovants et Durables (MID)
+                      </p>
+                      <p class="text-xs sm:text-sm text-horology-steel mt-1 leading-relaxed">
+                        Vibrations de structures, Caractérisation des matériaux, Incertitude probabiliste, Modélisation non-linéaire, Matériaux actifs.
+                      </p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-horology-card border border-horology-border">
+                      <p class="font-mono text-xs text-sky-400 font-bold">
+                        Deuxième année — Domaine Structures et Matériaux (SMA)
+                      </p>
+                      <p class="text-xs sm:text-sm text-horology-steel mt-1 leading-relaxed">
+                        Matériaux composites, Résistance des matériaux, Machine learning, Deep learning, CAO, Viscoélasticité linéaire/plasticité, Méthode des éléments finis.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Photo de l'INP SIGMA Clermont -->
+                  ${renderSinglePhotoCard(3, 0, 'Visuel de l’école • INP SIGMA Clermont')}
+                </div>
+              </div>
+
+              <!-- CPGE Buffon -->
+              <div class="relative">
+                <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-sky-400 ring-4 ring-horology-surface"></span>
+                <div class="p-4 sm:p-5 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2.5">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="space-y-1.5 min-w-0">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-horology-card text-sky-300 font-mono text-xs font-bold">
+                          2021 – 2024
+                        </span>
+                        <span class="font-mono text-xs text-horology-steelMuted">Paris</span>
+                      </div>
+                      <h3 class="text-lg sm:text-xl font-bold text-white">
+                        Classe Préparatoire aux Grandes Écoles (CPGE) Lycée Buffon
+                      </h3>
+                    </div>
+                    ${renderLogoBadge('assets/logo_buffon.png', 'Logo Lycée Buffon Paris', 'BUFFON', 'w-14 h-14')}
+                  </div>
+                  <ul class="space-y-1.5 text-xs sm:text-sm text-horology-steel">
+                    <li><strong class="text-white">MP* (2022 – 2024) :</strong> Maths, Physique, Option Informatique.</li>
+                    <li><strong class="text-white">MPSI (2021 – 2022) :</strong> Maths, Physique, Sciences de l’ingénieur.</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 04H — PROJET INDUSTRIEL EN COURS : SAFRAN TRANSMISSION SYSTEMS
+        // -------------------------------------------------------------------
+        {
+          step: 4,
+          hourLabel: '04H',
+          shortTitle: 'PROJET SAFRAN',
+          kicker: 'Rubrique 04 / 11 • 04h',
+          title: 'Projet Industriel — Safran Transmission Systems',
+          subtitle: 'Comparaison de méthodes d’estimation d’une limite de fatigue (2026 – En cours • INP SIGMA Clermont)',
+          render: () => `
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-3.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">2026 – En cours</span>
+                  <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-mono text-xs font-bold">Safran Transmission Systems</span>
+                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Norme ISO 12107:2012</span>
+                </div>
+                ${renderLogoBadge('assets/logo_safran.png', 'Logo Safran Transmission Systems', 'SAFRAN', 'w-14 h-14')}
+              </div>
+
+              <!-- Contexte industriel -->
+              <div class="p-3.5 rounded-2xl bg-horology-bg/85 border border-horology-gold/35 mb-3.5">
+                <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                  <strong class="text-horology-goldLight">Contexte &amp; objectifs :</strong> Dimensionnement en fatigue à durée de vie infinie de transmissions mécaniques soumises à des chargements cycliques. Étude comparative des hypothèses, limites et complémentarités entre la <strong class="text-white">méthode binaire Probit</strong> (Maximum de Vraisemblance, estimation de <span class="font-mono text-horology-goldLight">S<sub>50%</sub></span> et <span class="font-mono text-horology-goldLight">σ = 1/b</span>) et la <strong class="text-white">méthode par modèle de fatigue probabiliste</strong> (norme <span class="font-mono">ISO 12107:2012</span>, loi de Basquin), avec en perspective l’estimation de <strong class="text-white">marges de sécurité sur nombre d’essais limité</strong> (Perrin et al., <em>Structural Safety</em>, 2026).
+                </p>
+              </div>
+
+              <!-- Travaux et résultats obtenus -->
+              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
+                  <span>
+                    <strong class="text-white">Sensibilité à la taille d’échantillon (Monte-Carlo, 150 tirages indépendants) :</strong> Simulations sur 5 paliers (<span class="font-mono">440 à 560 MPa</span>, <span class="font-mono text-horology-goldLight">S<sub>50%</sub><sup>théorique</sup> = 500,79 MPa</span>). Identification de la <strong class="text-white">zone optimale de 40 à 60 éprouvettes</strong> (<span class="font-mono">8–12</span>/palier, erreur stabilisée à <span class="font-mono">~1,2–1,4 %</span>), confirmation de la mise en garde ISO 12107 sous <span class="font-mono">15–28</span> éprouvettes, et passage sous <span class="font-mono">1 %</span> d’erreur à <span class="font-mono">100–150</span> éprouvettes.
+                  </span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span>
+                    <strong class="text-white">Sensibilité au pas entre paliers de contrainte <span class="font-mono">d</span> :</strong> Étude sur <span class="font-mono">50</span> éprouvettes (<span class="font-mono">d</span> de <span class="font-mono">5</span> à <span class="font-mono">100 MPa</span>) validant la <strong class="text-white">fenêtre optimale <span class="font-mono text-sky-300">d ∈ [20, 40] MPa</span></strong> (<span class="font-mono">0,5 ≤ d/σ ≤ 2,0</span>), où l’erreur sur <span class="font-mono">σ</span> atteint son minimum (<span class="font-mono">~20 %</span>) et celle sur <span class="font-mono">S<sub>50%</sub></span> reste <span class="font-mono">&lt; 1,3 %</span>.
+                  </span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
+                  <span>
+                    <strong class="text-white">Implémentation Python &amp; validation statistique :</strong> Régression Maximum de Vraisemblance Probit, test <span class="font-mono">χ²</span> de linéarité, estimateur non paramétrique de Kärber et IC 95 % validés sur <strong class="text-white">NBS Handbook 91</strong> (<span class="font-mono">ED<sub>50</sub> = 27,801 V</span>, <span class="font-mono">p = 0,9888</span>) et <strong class="text-white">Finney 1952</strong> (<span class="font-mono">ED<sub>50</sub> = 5,113 mg/L</span>, <span class="font-mono">p = 0,8927</span>).
+                  </span>
+                </li>
+              </ul>
+
+              ${renderGalleryModule(4)}
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 05H — STAGE ASSISTANT INGÉNIEUR R&D — ICIMB ŁUKASIEWICZ
+        // -------------------------------------------------------------------
+        {
+          step: 5,
+          hourLabel: '05H',
+          shortTitle: 'R&D ICIMB',
+          kicker: 'Rubrique 05 / 11 • 05h',
+          title: 'Stage Assistant Ingénieur — ICIMB Łukasiewicz',
+          subtitle: 'Sieć Badawcza Łukasiewicz, Instytut Ceramiki i Materiałów Budowlanych (Varsovie • Mai 2026 à Août 2026)',
+          render: () => `
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Mai 2026 – Août 2026</span>
+                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Varsovie • R&amp;D Matériaux Céramiques</span>
+                </div>
+                ${renderLogoBadge('assets/logo_icimb.png', 'Logo ICIMB Łukasiewicz', 'ICIMB', 'w-14 h-14')}
+              </div>
+
+              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Conception de système de stockage d’énergie thermique en céramique</strong> élaboré à partir de <strong class="text-white">matières premières issues de déchets</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Recherche de la meilleure composition et géométrie</strong> avec les procédés de fabrication les plus simples en vue d’une <strong class="text-white">production de masse</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Caractérisation et certification de matériaux</strong> pour des clients industriels.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Maîtrise expérimentale :</strong> <span class="font-mono text-horology-goldLight">BET, DRX, ATG-ATD, MEB, STEM, DSC et Mouton de Charpy</span>.</span>
+                </li>
+              </ul>
+
+              ${renderGalleryModule(5)}
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 06H — PROJET INDUSTRIEL 2E ANNÉE — PHIMECA
+        // -------------------------------------------------------------------
+        {
+          step: 6,
+          hourLabel: '06H',
+          shortTitle: 'PROJET PHIMECA',
+          kicker: 'Rubrique 06 / 11 • 06h',
+          title: 'Projet Industriel 2e Année — PHIMECA',
+          subtitle: 'Prédiction par machine learning de propriétés de matériaux et optimisation inverse (INP SIGMA Clermont)',
+          render: () => `
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-3 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-mono text-xs font-bold">2<sup>e</sup> année INP SIGMA Clermont</span>
+                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-goldLight font-mono text-xs border border-horology-border">Partenaire : PHIMECA</span>
+                </div>
+                ${renderLogoBadge('assets/logo_phimeca.png', 'Logo PHIMECA', 'PHIMECA', 'w-14 h-14')}
+              </div>
+
+              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Prédiction par machine learning</strong> des propriétés physiques et mécaniques de matériaux à partir de leurs descripteurs.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Optimisation inverse</strong> pour le design de nouveaux matériaux répondant à des <strong class="text-white">propriétés cibles</strong>.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Méthodes &amp; algorithmes :</strong> <span class="font-mono text-horology-goldLight">Optimisation bayésienne et génétique sur CNN, SVR, XGBoost</span>.</span>
+                </li>
+              </ul>
+
+              ${renderGalleryModule(6)}
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 07H — STAGE OUVRIER — MECALOC TP
+        // -------------------------------------------------------------------
+        {
+          step: 7,
+          hourLabel: '07H',
+          shortTitle: 'MECALOC TP',
+          kicker: 'Rubrique 07 / 11 • 07h',
+          title: 'Stage Ouvrier de Première Année — MECALOC TP',
+          subtitle: 'Réparation, maintenance et location d’engins de travaux publics pour entreprises et particuliers (Juillet 2025)',
+          render: () => `
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Juillet 2025</span>
+                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Atelier &amp; Maintenance TP</span>
+                </div>
+                ${renderLogoBadge('assets/logo_mecaloc.png', 'Logo MECALOC TP', 'MECALOC', 'w-14 h-14')}
+              </div>
+
+              <p class="text-xs sm:text-sm text-horology-steel leading-relaxed mb-3">
+                Immersion en atelier au sein de <strong class="text-white">MECALOC TP</strong> (réparation, maintenance et location d’engins de travaux publics pour des entreprises et particuliers) :
+              </p>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Marteaux-piqueurs</div>
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Plaques vibrantes</div>
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Pilonneuses</div>
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Jeux de feux tricolores</div>
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Batteries</div>
+                <div class="p-2.5 rounded-xl bg-horology-bg/85 border border-horology-border text-white font-medium">Peinture</div>
+              </div>
+
+              ${renderGalleryModule(7)}
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 08H — SPORT & LEADERSHIP — VOLLEY-BALL SIGMA CLERMONT (LOGO + 2 PHOTOS)
+        // -------------------------------------------------------------------
+        {
+          step: 8,
+          hourLabel: '08H',
+          shortTitle: 'VOLLEY-BALL',
+          kicker: 'Rubrique 08 / 11 • 08h',
+          title: 'Sport & Leadership — Volley-ball SIGMA Clermont',
+          subtitle: 'Coach et capitaine de l’équipe de volley-ball de l’INP SIGMA Clermont',
+          render: () => `
+            <div>
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-3 py-1 rounded-lg bg-horology-gold/20 text-horology-goldLight font-mono text-xs font-bold">Coach &amp; Capitaine</span>
+                  <span class="px-3 py-1 rounded-lg bg-horology-card text-horology-steel font-mono text-xs border border-horology-border">Équipe Volley-ball SIGMA Clermont</span>
+                </div>
+                ${renderLogoBadge('assets/logo_volley.png', 'Logo Équipe Volley-ball SIGMA Clermont', 'VOLLEY', 'w-14 h-14')}
+              </div>
+
+              <ul class="space-y-2 text-xs sm:text-sm text-horology-steel leading-relaxed">
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-horology-gold mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Encadrement des entraînements :</strong> préparation des séances techniques et tactiques hebdomadaires de l’équipe.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400 mt-2 shrink-0"></span>
+                  <span><strong class="text-white">Capitanat en compétition :</strong> cohésion du collectif, communication sur le terrain et gestion des temps forts.</span>
+                </li>
+              </ul>
+
+              ${renderGalleryModule(8)}
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 09H — ENGAGEMENTS ASSOCIATIFS — FIZZTEAM & REMISE DES DIPLÔMES (LOGOS + 1 PHOTO CHACUNE)
+        // -------------------------------------------------------------------
+        {
+          step: 9,
+          hourLabel: '09H',
+          shortTitle: 'VIE ASSOCIATIVE',
+          kicker: 'Rubrique 09 / 11 • 09h',
+          title: 'Vie Associative — FizZteam & Remise des Diplômes',
+          subtitle: 'Engagement étudiant au sein du foyer de l’école et des relations entreprises à l’INP SIGMA Clermont',
+          render: () => `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Association 1 : FizZteam (Logo + 1 photo dédiée) -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-gold/35 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-start justify-between gap-2.5 mb-2">
+                    <div>
+                      <p class="font-mono text-[10px] uppercase text-horology-gold font-bold">Foyer de l’école</p>
+                      <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">Membre actif — FizZteam</h3>
+                    </div>
+                    ${renderLogoBadge('assets/logo_fizzteam.png', 'Logo FizZteam SIGMA Clermont', 'FIZZ', 'w-12 h-12')}
+                  </div>
+                  <p class="text-xs text-horology-steel leading-relaxed">
+                    Animation de la vie étudiante, gestion quotidienne du foyer et organisation d’événements conviviaux à SIGMA Clermont.
+                  </p>
+                </div>
+
+                ${renderSinglePhotoCard(9, 0, 'Photo • FizZteam')}
+              </div>
+
+              <!-- Association 2 : Remise des Diplômes (Logo + 1 photo dédiée) -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-sky-400/35 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-start justify-between gap-2.5 mb-2">
+                    <div>
+                      <p class="font-mono text-[10px] uppercase text-sky-400 font-bold">Relations Entreprises</p>
+                      <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">Responsable Partenariats — RDD</h3>
+                    </div>
+                    ${renderLogoBadge('assets/logo_rdd.png', 'Logo Remise des Diplômes SIGMA', 'RDD', 'w-12 h-12')}
+                  </div>
+                  <p class="text-xs text-horology-steel leading-relaxed">
+                    Prospection d’entreprises, négociation de partenariats et coordination logistique de la cérémonie de remise des diplômes.
+                  </p>
+                </div>
+
+                ${renderSinglePhotoCard(9, 1, 'Photo • Remise des Diplômes')}
+              </div>
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 10H — DOCUMENTS TÉLÉCHARGEABLES & GUIDE ASSETS/
+        // -------------------------------------------------------------------
+        {
+          step: 10,
+          hourLabel: '10H',
+          shortTitle: 'DOCUMENTS',
+          kicker: 'Rubrique 10 / 11 • 10h',
+          title: 'Documents d’Intérêt & Guide GitHub assets/',
+          subtitle: 'CV, lettre de motivation, diplômes, certifications, recommandations, articles scientifiques et repères des fichiers',
+          render: () => `
+            <div class="space-y-4">
+              <!-- Grille des 6 documents PDF d'intérêt -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <a
+                  href="assets/CV_Borys_Lucjanek.pdf"
+                  download="CV_Borys_Lucjanek.pdf"
+                  data-doc-label="CV_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-gold/50 hover:border-horology-gold transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-gold/20 text-horology-goldLight font-mono text-[10px] font-bold mb-1.5">PDF • CV</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Curriculum Vitae</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">Parcours ingénieur Matériaux &amp; Mécanique</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-horology-gold font-semibold">
+                    Télécharger ↓
+                  </span>
+                </a>
+
+                <a
+                  href="assets/Lettre_Motivation_Borys_Lucjanek.pdf"
+                  download="Lettre_Motivation_Borys_Lucjanek.pdf"
+                  data-doc-label="Lettre_Motivation_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-card text-sky-300 font-mono text-[10px] font-bold mb-1.5">PDF • PRÉSENTATION</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Lettre de motivation</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">Projet professionnel &amp; objectifs ingénieur</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-sky-400 font-semibold">
+                    Télécharger ↓
+                  </span>
+                </a>
+
+                <a
+                  href="assets/Diplomes_Borys_Lucjanek.pdf"
+                  download="Diplomes_Borys_Lucjanek.pdf"
+                  data-doc-label="Diplomes_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-card text-amber-300 font-mono text-[10px] font-bold mb-1.5">PDF • ACADÉMIQUE</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Diplômes &amp; Relevés</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">INP SIGMA Clermont, CPGE MP* &amp; Baccalauréat</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-amber-300 font-semibold">
+                    Consulter ↓
+                  </span>
+                </a>
+
+                <a
+                  href="assets/Certifications_Borys_Lucjanek.pdf"
+                  download="Certifications_Borys_Lucjanek.pdf"
+                  data-doc-label="Certifications_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-card text-purple-300 font-mono text-[10px] font-bold mb-1.5">PDF • LANGUES &amp; OUTILS</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Certifications</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">Attestations Anglais C1, CAO/Simulation &amp; Data</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-purple-300 font-semibold">
+                    Consulter ↓
+                  </span>
+                </a>
+
+                <a
+                  href="assets/Lettres_Recommandation_Borys_Lucjanek.pdf"
+                  download="Lettres_Recommandation_Borys_Lucjanek.pdf"
+                  data-doc-label="Lettres_Recommandation_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-card text-emerald-300 font-mono text-[10px] font-bold mb-1.5">PDF • RÉFÉRENCES</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Recommandations</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">Tuteurs de stage R&amp;D &amp; enseignants référents</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-emerald-400 font-semibold">
+                    Consulter ↓
+                  </span>
+                </a>
+
+                <a
+                  href="assets/Articles_Scientifiques_Borys_Lucjanek.pdf"
+                  download="Articles_Scientifiques_Borys_Lucjanek.pdf"
+                  data-doc-label="Articles_Scientifiques_Borys_Lucjanek.pdf"
+                  class="doc-link p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border hover:border-horology-gold/60 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <span class="inline-block px-2 py-0.5 rounded bg-horology-card text-rose-300 font-mono text-[10px] font-bold mb-1.5">PDF • RECHERCHE</span>
+                    <h4 class="text-sm font-bold text-white group-hover:text-horology-goldLight">Articles &amp; Rapports</h4>
+                    <p class="text-xs text-horology-steelMuted mt-1">Publications, études fatigue &amp; travaux R&amp;D</p>
+                  </div>
+                  <span class="mt-2.5 inline-flex items-center gap-1 text-xs font-mono text-rose-300 font-semibold">
+                    Consulter ↓
+                  </span>
+                </a>
+              </div>
+
+              <!-- Guide rapide d'ajout des logos, images et PDF dans assets/ sur GitHub -->
+              <div class="p-4 rounded-2xl bg-horology-bg/85 border border-horology-border space-y-2">
+                <h3 class="font-mono text-xs uppercase tracking-wider text-horology-gold font-semibold">
+                  Guide rapide • Fichiers attendus sur GitHub (dossier assets/)
+                </h3>
+                <p class="text-xs text-horology-steel leading-relaxed">
+                  Déposez vos logos, photos et documents dans <code class="px-1.5 py-0.5 rounded bg-horology-card text-horology-goldLight">assets/</code> à côté de <code class="px-1.5 py-0.5 rounded bg-horology-card text-white">index.html</code> :
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 font-mono text-[11px] text-horology-steelMuted pt-1">
+                  <div>• <span class="text-white">00h :</span> photo.jpg</div>
+                  <div>• <span class="text-white">03h :</span> logo_sigma.png, logo_buffon.png, sigma.jpg</div>
+                  <div>• <span class="text-white">04h :</span> logo_safran.png, safran_1.jpg à 3.jpg</div>
+                  <div>• <span class="text-white">05h :</span> logo_icimb.png, icimb_1.jpg à 3.jpg</div>
+                  <div>• <span class="text-white">06h :</span> logo_phimeca.png, phimeca_1.jpg à 3.jpg</div>
+                  <div>• <span class="text-white">07h :</span> logo_mecaloc.png, mecaloc_1.jpg à 3.jpg</div>
+                  <div>• <span class="text-white">08h :</span> logo_volley.png, volley_1.jpg, volley_2.jpg</div>
+                  <div>• <span class="text-white">09h :</span> logo_fizzteam.png, fizzteam.jpg, logo_rdd.png, rdd.jpg</div>
+                  <div class="sm:col-span-2">• <span class="text-white">10h PDF :</span> CV, Lettre_Motivation, Diplomes, Certifications, Lettres_Recommandation, Articles_Scientifiques (.pdf)</div>
+                </div>
+              </div>
+
+              <!-- Sommaire rapide des 11 rubriques -->
+              <div class="grid grid-cols-3 sm:grid-cols-4 gap-1.5 text-[11px] font-mono">
+                <button type="button" data-goto-step="0" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">00h</span> Identité</button>
+                <button type="button" data-goto-step="1" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">01h</span> Compétences</button>
+                <button type="button" data-goto-step="2" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">02h</span> Langues</button>
+                <button type="button" data-goto-step="3" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">03h</span> Formation</button>
+                <button type="button" data-goto-step="4" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">04h</span> Safran</button>
+                <button type="button" data-goto-step="5" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">05h</span> ICIMB</button>
+                <button type="button" data-goto-step="6" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">06h</span> PHIMECA</button>
+                <button type="button" data-goto-step="7" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">07h</span> MECALOC</button>
+                <button type="button" data-goto-step="8" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">08h</span> Volley</button>
+                <button type="button" data-goto-step="9" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">09h</span> FizZteam</button>
+                <button type="button" data-goto-step="10" class="step-jump-btn p-2 rounded-lg bg-horology-bg/70 hover:bg-horology-card border border-horology-border text-left"><span class="text-horology-gold font-bold">10h</span> Documents</button>
+                <button type="button" data-goto-step="11" class="step-jump-btn p-2 rounded-lg bg-horology-gold/20 border border-horology-gold/60 text-horology-goldLight text-left font-bold">11h Contact →</button>
+              </div>
+            </div>
+          `
+        },
+
+        // -------------------------------------------------------------------
+        // 11H — REMERCIEMENTS & CONTACT (RETOUR À 12H = 00H AU CLIC SUIVANT)
+        // -------------------------------------------------------------------
+        {
+          step: 11,
+          hourLabel: '11H',
+          shortTitle: 'CONTACT & MERCI',
+          kicker: 'Rubrique finale • 11h / 11h (Réserve 100%)',
+          title: 'Merci pour votre visite !',
+          subtitle: 'Vous avez parcouru l’ensemble des 11 rubriques de mon cadran. N’hésitez pas à me contacter pour échanger autour de mes projets et travaux en sciences des matériaux.',
+          render: () => `
+            <div class="space-y-4">
+              <!-- Message de remerciement -->
+              <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-horology-gold/15 via-horology-bg to-horology-card border border-horology-gold/50">
+                <p class="text-sm sm:text-base text-slate-100 leading-relaxed">
+                  Un grand merci d’avoir pris le temps d’explorer mon parcours heure par heure. Je reste à votre disposition pour tout échange professionnel autour des <strong class="text-horology-goldLight">sciences des matériaux</strong>, de la <strong class="text-white">mécanique des structures</strong> ou de la <strong class="text-white">simulation numérique</strong>.
+                </p>
+              </div>
+
+              <!-- Coordonnées complètes (E-mails, Téléphone, LinkedIn) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- E-mail académique SIGMA Clermont + Copie rapide -->
+                <div class="p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-gold/40 flex flex-col justify-between gap-2.5">
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] uppercase text-horology-gold font-semibold">E-mail académique</p>
+                    <a href="mailto:borys.lucjanek@sigma-clermont.fr" class="block text-xs sm:text-sm font-bold text-white hover:text-horology-goldLight truncate mt-0.5">
+                      borys.lucjanek@sigma-clermont.fr
+                    </a>
+                  </div>
+                  <button
+                    type="button"
+                    data-copy-text="borys.lucjanek@sigma-clermont.fr"
+                    class="copy-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-horology-card hover:bg-horology-gold hover:text-horology-bg text-xs font-mono font-semibold text-horology-goldLight border border-horology-border transition-colors"
+                  >
+                    <span>Copier l’adresse</span>
+                  </button>
+                </div>
+
+                <!-- E-mail personnel + Copie rapide -->
+                <div class="p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border flex flex-col justify-between gap-2.5">
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] uppercase text-horology-steelMuted font-semibold">E-mail personnel</p>
+                    <a href="mailto:Borytos@gmail.com" class="block text-xs sm:text-sm font-bold text-white hover:text-horology-goldLight truncate mt-0.5">
+                      Borytos@gmail.com
+                    </a>
+                  </div>
+                  <button
+                    type="button"
+                    data-copy-text="Borytos@gmail.com"
+                    class="copy-btn w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-horology-card hover:bg-horology-gold hover:text-horology-bg text-xs font-mono font-semibold text-horology-goldLight border border-horology-border transition-colors"
+                  >
+                    <span>Copier l’adresse</span>
+                  </button>
+                </div>
+
+                <!-- Téléphone -->
+                <div class="p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border flex items-center justify-between gap-3">
+                  <div>
+                    <p class="font-mono text-[10px] uppercase text-horology-steelMuted">Téléphone</p>
+                    <a href="tel:+33664088176" class="text-sm font-mono font-bold text-white hover:text-horology-goldLight">
+                      +33 6 64 08 81 76
+                    </a>
+                  </div>
+                  <a href="tel:+33664088176" class="p-2.5 rounded-xl bg-horology-card text-horology-gold hover:bg-horology-gold hover:text-horology-bg transition-colors" aria-label="Appeler Borys Lucjanek">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </a>
+                </div>
+
+                <!-- LinkedIn -->
+                <div class="p-3.5 rounded-2xl bg-horology-bg/90 border border-horology-border flex items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] uppercase text-horology-steelMuted">LinkedIn</p>
+                    <a
+                      href="https://www.linkedin.com/in/borys-lucjanek-479b46227/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="block text-sm font-bold text-sky-400 hover:text-sky-300 truncate"
+                    >
+                      Borys Lucjanek ↗
+                    </a>
+                  </div>
+                  <a
+                    href="https://www.linkedin.com/in/borys-lucjanek-479b46227/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="p-2.5 rounded-xl bg-sky-500/20 text-sky-300 hover:bg-sky-400 hover:text-horology-bg transition-colors shrink-0"
+                    aria-label="Ouvrir le profil LinkedIn"
+                  >
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Actions finales -->
+              <div class="pt-1 flex flex-wrap items-center gap-3">
+                <a
+                  href="assets/CV_Borys_Lucjanek.pdf"
+                  download="CV_Borys_Lucjanek.pdf"
+                  data-doc-label="CV_Borys_Lucjanek.pdf"
+                  class="doc-link inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-horology-gold to-amber-500 hover:from-horology-goldLight hover:to-horology-gold text-horology-bg font-bold text-xs sm:text-sm shadow-gold-glow transition-all"
+                >
+                  <span>Télécharger le CV (PDF) ↓</span>
+                </a>
+
+                <a
+                  href="mailto:borys.lucjanek@sigma-clermont.fr?subject=Contact%20Portfolio%20%E2%80%94%20Borys%20Lucjanek"
+                  class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-horology-card hover:bg-horology-border text-white border border-horology-border font-semibold text-xs sm:text-sm transition-colors"
+                >
+                  <span>Envoyer un e-mail</span>
+                </a>
+
+                <button
+                  type="button"
+                  data-goto-step="0"
+                  data-clockwise-loop="true"
+                  class="step-jump-btn inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-horology-bg hover:bg-horology-card text-horology-goldLight border border-horology-gold/40 font-mono text-xs sm:text-sm font-semibold transition-colors"
+                >
+                  <span>Boucler à 12h (Retour 00h) ↻</span>
+                </button>
+              </div>
+            </div>
+          `
+        }
+      ];
+
+      // =====================================================================
+      // 5. INITIALISATION DU CADRAN SVG (60 GRADUATIONS + 12 INDEX HORAIRES)
+      // =====================================================================
+      const minuteTicksLayer = document.getElementById('minute-ticks-layer');
+      const hourMarkersLayer = document.getElementById('hour-markers-layer');
+      const miniHoursBar = document.getElementById('mini-hours-bar');
+
+      const CX = 220;
+      const CY = 220;
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+
+      if (minuteTicksLayer) {
+        for (let m = 0; m < 60; m++) {
+          const posRad = ((m * 6 - 90) * Math.PI) / 180;
+          const isHourTick = m % 5 === 0;
+          const rOuter = 179;
+          const rInner = isHourTick ? 168 : 173;
+
+          const tick = document.createElementNS(SVG_NS, 'line');
+          tick.setAttribute('x1', (CX + rInner * Math.cos(posRad)).toFixed(2));
+          tick.setAttribute('y1', (CY + rInner * Math.sin(posRad)).toFixed(2));
+          tick.setAttribute('x2', (CX + rOuter * Math.cos(posRad)).toFixed(2));
+          tick.setAttribute('y2', (CY + rOuter * Math.sin(posRad)).toFixed(2));
+          tick.setAttribute('stroke', isHourTick ? '#d4af37' : '#64748b');
+          tick.setAttribute('stroke-width', isHourTick ? '2.2' : '1');
+          tick.setAttribute('stroke-linecap', 'round');
+          minuteTicksLayer.appendChild(tick);
+        }
+      }
+
+      const markerElements = {};
+      if (hourMarkersLayer) {
+        for (let h = 1; h <= 12; h++) {
+          const targetStep = h === 12 ? 0 : h;
+          const posRad = ((h * 30 - 90) * Math.PI) / 180;
+          const rNumeral = 150;
+          const nx = CX + rNumeral * Math.cos(posRad);
+          const ny = CY + rNumeral * Math.sin(posRad);
+
+          const group = document.createElementNS(SVG_NS, 'g');
+          group.setAttribute('class', 'hour-marker-group');
+          group.setAttribute('role', 'button');
+          group.setAttribute('tabindex', '0');
+          group.setAttribute(
+            'aria-label',
+            h === 12
+              ? 'Aller à 12h (Retour au début 00h : Présentation)'
+              : `Aller à ${h < 10 ? '0' + h : h}h : ${PORTFOLIO_STEPS[h].shortTitle}`
+          );
+          group.setAttribute('data-hour-step', String(targetStep));
+
+          const hitCircle = document.createElementNS(SVG_NS, 'circle');
+          hitCircle.setAttribute('cx', nx.toFixed(2));
+          hitCircle.setAttribute('cy', ny.toFixed(2));
+          hitCircle.setAttribute('r', '17');
+          hitCircle.setAttribute('fill', 'transparent');
+          hitCircle.setAttribute('class', 'hour-hit-ring');
+
+          const activeHalo = document.createElementNS(SVG_NS, 'circle');
+          activeHalo.setAttribute('cx', nx.toFixed(2));
+          activeHalo.setAttribute('cy', ny.toFixed(2));
+          activeHalo.setAttribute('r', '14');
+          activeHalo.setAttribute('fill', 'rgba(212, 175, 55, 0.18)');
+          activeHalo.setAttribute('stroke', '#d4af37');
+          activeHalo.setAttribute('stroke-width', '1.4');
+          activeHalo.setAttribute('opacity', '0');
+
+          const text = document.createElementNS(SVG_NS, 'text');
+          text.setAttribute('x', nx.toFixed(2));
+          text.setAttribute('y', (ny + 5.5).toFixed(2));
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('font-family', 'Playfair Display, Georgia, serif');
+          text.setAttribute('font-weight', '700');
+          text.setAttribute('font-size', h === 12 ? '17' : '15.5');
+          text.setAttribute('fill', '#cbd5e1');
+          text.setAttribute('class', 'hour-numeral');
+          text.textContent = String(h);
+
+          group.appendChild(hitCircle);
+          group.appendChild(activeHalo);
+          group.appendChild(text);
+          hourMarkersLayer.appendChild(group);
+
+          markerElements[h] = { group, activeHalo, text };
+
+          group.addEventListener('click', () => {
+            if (h === 12 && currentStep === 11) {
+              goToStep(0, true, 'clockwise');
+            } else {
+              goToStep(targetStep);
+            }
+          });
+          group.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (h === 12 && currentStep === 11) {
+                goToStep(0, true, 'clockwise');
+              } else {
+                goToStep(targetStep);
+              }
+            }
+          });
+        }
+      }
+
+      const miniPillButtons = {};
+      if (miniHoursBar) {
+        for (let s = 0; s <= 11; s++) {
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.textContent = s === 0 ? '00' : (s < 10 ? `0${s}` : `${s}`);
+          pill.title = `${PORTFOLIO_STEPS[s].hourLabel} — ${PORTFOLIO_STEPS[s].title}`;
+          pill.setAttribute('aria-label', `Aller à ${PORTFOLIO_STEPS[s].hourLabel}`);
+          pill.className = 'w-7 h-7 rounded-lg font-mono text-[11px] font-semibold border transition-all bg-horology-surface border-horology-border text-horology-steelMuted hover:border-horology-gold hover:text-white';
+          pill.addEventListener('click', () => goToStep(s));
+          miniHoursBar.appendChild(pill);
+          miniPillButtons[s] = pill;
+        }
+      }
+
+      // =====================================================================
+      // 6. VISIONNEUSE LIGHTBOX PLEIN ÉCRAN
+      // =====================================================================
+      const lightboxModal = document.getElementById('gallery-lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxSvgHolder = document.getElementById('lightbox-svg-holder');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      const lightboxCounter = document.getElementById('lightbox-counter');
+      const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+      const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+      const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+
+      let lightboxState = { open: false, step: 4, index: 0 };
+
+      function updateLightboxDisplay() {
+        const gallery = GALLERIES_BY_STEP[lightboxState.step];
+        if (!gallery) return;
+        const total = gallery.items.length;
+        const item = gallery.items[lightboxState.index];
+        const resolvedSrc = localImageOverrides[item.src] || item.src;
+
+        lightboxCounter.textContent = `${lightboxState.index + 1} / ${total}`;
+        lightboxCaption.textContent = item.caption;
+
+        lightboxImg.classList.add('hidden');
+        lightboxSvgHolder.classList.remove('hidden');
+        lightboxSvgHolder.innerHTML = BLUEPRINT_SVGS[item.svgKey] || '';
+
+        const probe = new Image();
+        probe.onload = () => {
+          lightboxImg.src = resolvedSrc;
+          lightboxImg.alt = item.caption;
+          lightboxImg.classList.remove('hidden');
+          lightboxSvgHolder.classList.add('hidden');
+        };
+        probe.src = resolvedSrc;
+      }
+
+      function openLightbox(step, index) {
+        lightboxState = { open: true, step, index };
+        updateLightboxDisplay();
+        lightboxModal.classList.remove('hidden');
+      }
+
+      function closeLightbox() {
+        lightboxState.open = false;
+        lightboxModal.classList.add('hidden');
+      }
+
+      if (lightboxCloseBtn) {
+        lightboxCloseBtn.addEventListener('click', closeLightbox);
+      }
+
+      if (lightboxModal) {
+        lightboxModal.addEventListener('click', (e) => {
+          if (e.target === lightboxModal) closeLightbox();
+        });
+      }
+
+      if (lightboxPrevBtn) {
+        lightboxPrevBtn.addEventListener('click', () => {
+          const gallery = GALLERIES_BY_STEP[lightboxState.step];
+          if (!gallery) return;
+          lightboxState.index = (lightboxState.index - 1 + gallery.items.length) % gallery.items.length;
+          updateLightboxDisplay();
+        });
+      }
+
+      if (lightboxNextBtn) {
+        lightboxNextBtn.addEventListener('click', () => {
+          const gallery = GALLERIES_BY_STEP[lightboxState.step];
+          if (!gallery) return;
+          lightboxState.index = (lightboxState.index + 1) % gallery.items.length;
+          updateLightboxDisplay();
+        });
+      }
+
+      // =====================================================================
+      // 7. GESTION D'ÉTAT, TOAST, COPIE PRESSE-PAPIERS & RENDERING
+      // =====================================================================
+      let currentStep = 0;
+      let cumulativeHandSteps = 0;
+
+      const watchHourHand = document.getElementById('watch-hour-hand');
+      const powerReserveArc = document.getElementById('power-reserve-arc');
+      const dialApertureStep = document.getElementById('dial-aperture-step');
+      const dialApertureLabel = document.getElementById('dial-aperture-label');
+      const controlsStepBadge = document.getElementById('controls-step-badge');
+      const controlsReserveBadge = document.getElementById('controls-reserve-badge');
+      const btnPrevHour = document.getElementById('btn-prev-hour');
+      const btnNextHour = document.getElementById('btn-next-hour');
+      const btnNextLabel = document.getElementById('btn-next-label');
+      const stageContentCard = document.getElementById('stage-content-card');
+      const stageDynamicBody = document.getElementById('stage-dynamic-body');
+      const toastEl = document.getElementById('toast-notification');
+      const toastMsgEl = document.getElementById('toast-message');
+
+      let toastTimer = null;
+
+      function showToast(message) {
+        if (!toastEl || !toastMsgEl) return;
+        toastMsgEl.textContent = message;
+        toastEl.classList.remove('opacity-0', 'translate-y-3');
+        toastEl.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.add('opacity-0', 'translate-y-3');
+          toastEl.classList.remove('opacity-100', 'translate-y-0');
+        }, 3200);
+      }
+
+      function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(`Copié : ${text}`);
+          }).catch(() => {
+            fallbackCopyText(text);
+          });
+        } else {
+          fallbackCopyText(text);
+        }
+      }
+
+      function fallbackCopyText(text) {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = text;
+        tempInput.style.position = 'fixed';
+        tempInput.style.left = '-9999px';
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand('copy');
+          showToast(`Copié : ${text}`);
+        } catch (err) {
+          showToast(`Adresse : ${text}`);
+        }
+        document.body.removeChild(tempInput);
+      }
+
+      function bindDynamicStageEvents() {
+        stageDynamicBody.querySelectorAll('.step-jump-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const target = parseInt(btn.getAttribute('data-goto-step'), 10);
+            const forceClockwise = btn.getAttribute('data-clockwise-loop') === 'true';
+            if (!Number.isNaN(target)) {
+              goToStep(target, true, forceClockwise ? 'clockwise' : 'auto');
+            }
+          });
+        });
+
+        stageDynamicBody.querySelectorAll('.copy-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const text = btn.getAttribute('data-copy-text');
+            if (text) copyToClipboard(text);
+          });
+        });
+
+        stageDynamicBody.querySelectorAll('.doc-link').forEach((link) => {
+          link.addEventListener('click', async (e) => {
+            const href = link.getAttribute('href');
+            const label = link.getAttribute('data-doc-label') || href;
+            try {
+              const response = await fetch(href, { method: 'HEAD' });
+              if (!response.ok) {
+                e.preventDefault();
+                showToast(`Placez "${label}" dans le dossier assets/ sur GitHub.`);
+              }
+            } catch (err) {
+              // Navigation directe conservée en local (file://)
+            }
+          });
+        });
+
+        // Changement de vignette active dans les galeries (04h à 09h)
+        stageDynamicBody.querySelectorAll('.gallery-thumb-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const step = parseInt(btn.getAttribute('data-gallery-step'), 10);
+            const idx = parseInt(btn.getAttribute('data-gallery-index'), 10);
+            if (!Number.isNaN(step) && !Number.isNaN(idx)) {
+              galleryActiveSlide[step] = idx;
+              goToStep(currentStep, false);
+            }
+          });
+        });
+
+        // Ouverture de la visionneuse Lightbox
+        stageDynamicBody.querySelectorAll('.gallery-open-lightbox-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const step = parseInt(btn.getAttribute('data-lightbox-step'), 10);
+            const idx = parseInt(btn.getAttribute('data-lightbox-index'), 10);
+            if (!Number.isNaN(step) && !Number.isNaN(idx)) {
+              openLightbox(step, idx);
+            }
+          });
+        });
+
+        // Prévisualisation immédiate d'une photo locale choisie par l'utilisateur
+        stageDynamicBody.querySelectorAll('.gallery-local-input').forEach((input) => {
+          input.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            const targetSrc = input.getAttribute('data-target-src');
+            if (file && targetSrc) {
+              const objectUrl = URL.createObjectURL(file);
+              localImageOverrides[targetSrc] = objectUrl;
+              showToast(`Aperçu chargé pour ${targetSrc}`);
+              goToStep(currentStep, false);
+            }
+          });
+        });
+      }
+
+      // Fonction centrale de navigation entre les heures (00h à 11h, retour 12h = 00h)
+      function goToStep(nextStep, animateCard = true, direction = 'auto') {
+        const clampedStep = Math.max(0, Math.min(11, nextStep));
+        const prevStep = currentStep;
+        currentStep = clampedStep;
+        const data = PORTFOLIO_STEPS[currentStep];
+
+        // Calcul de la rotation horaire fluide sans saut arrière lors du passage 11h -> 12h (00h)
+        if (direction === 'clockwise') {
+          let forwardDelta = (currentStep - prevStep + 12) % 12;
+          if (forwardDelta === 0) forwardDelta = 12;
+          cumulativeHandSteps += forwardDelta;
+        } else if (direction === 'counterclockwise') {
+          let backwardDelta = (prevStep - currentStep + 12) % 12;
+          if (backwardDelta === 0) backwardDelta = 12;
+          cumulativeHandSteps -= backwardDelta;
+        } else {
+          // Mouvement le plus naturel autour du cadran (ex: 11h -> 00h avance de +1 cran à 12h)
+          let delta = currentStep - prevStep;
+          if (delta > 6) delta -= 12;
+          if (delta < -6) delta += 12;
+          cumulativeHandSteps += delta;
+        }
+
+        const handTurnValue = cumulativeHandSteps * 30;
+        const reservePercent = Math.round((currentStep / 11) * 100);
+
+        // 1. Positionnement de l'aiguille des heures
+        if (watchHourHand) {
+          watchHourHand.style.transform = `rotate(${handTurnValue}deg)`;
+        }
+
+        // 2. Remplissage de l'arc de réserve de marche (0% à 100%)
+        if (powerReserveArc) {
+          const circumference = 1168.67;
+          const offset = circumference * (1 - currentStep / 11);
+          powerReserveArc.style.strokeDashoffset = offset.toFixed(2);
+        }
+
+        // 3. Guichet de complication sur le cadran (uniquement heures et %)
+        if (dialApertureStep && dialApertureLabel) {
+          const stepStr = currentStep < 10 ? `0${currentStep}` : `${currentStep}`;
+          dialApertureStep.textContent = `${stepStr} / 11H • ${reservePercent}%`;
+          dialApertureLabel.textContent = data.shortTitle;
+        }
+
+        // 4. Illumination dorée de l'index actif sur le cadran (12 correspond à 00h)
+        for (let h = 1; h <= 12; h++) {
+          const marker = markerElements[h];
+          if (!marker) continue;
+          const isActive = (h === 12 && currentStep === 0) || currentStep === h;
+          marker.activeHalo.setAttribute('opacity', isActive ? '1' : '0');
+          marker.text.setAttribute('fill', isActive ? '#f3e5ab' : '#cbd5e1');
+          if (isActive) {
+            marker.text.setAttribute('filter', 'url(#goldGlow)');
+          } else {
+            marker.text.removeAttribute('filter');
+          }
+        }
+
+        // 5. Mise à jour des badges et boutons fixes (hauteur 46px, sans retour à la ligne)
+        if (btnPrevHour) {
+          btnPrevHour.disabled = currentStep === 0;
+        }
+
+        const formattedStep = currentStep < 10 ? `0${currentStep}` : `${currentStep}`;
+        if (controlsStepBadge) {
+          controlsStepBadge.textContent = `${formattedStep} / 11h`;
+        }
+        if (controlsReserveBadge) {
+          controlsReserveBadge.textContent = `${reservePercent}%`;
+        }
+
+        if (btnNextLabel) {
+          if (currentStep === 0) {
+            btnNextLabel.textContent = 'Démarrer · 01h →';
+          } else if (currentStep < 11) {
+            const nextH = currentStep + 1;
+            const nextFormatted = nextH < 10 ? `0${nextH}` : `${nextH}`;
+            btnNextLabel.textContent = `Suivant · ${nextFormatted}h →`;
+          } else {
+            btnNextLabel.textContent = 'Suivant · 12h →';
+          }
+        }
+
+        // 6. Barre de repères rapides (00 à 11)
+        for (let s = 0; s <= 11; s++) {
+          const pill = miniPillButtons[s];
+          if (!pill) continue;
+          const isCurrent = s === currentStep;
+          const isVisited = s > 0 && s < currentStep;
+
+          pill.className = isCurrent
+            ? 'w-7 h-7 rounded-lg font-mono text-[11px] font-bold border transition-all bg-horology-gold border-horology-gold text-horology-bg shadow-gold-glow scale-105'
+            : isVisited
+            ? 'w-7 h-7 rounded-lg font-mono text-[11px] font-semibold border transition-all bg-horology-card border-horology-gold/40 text-horology-goldLight hover:border-horology-gold'
+            : 'w-7 h-7 rounded-lg font-mono text-[11px] font-semibold border transition-all bg-horology-surface border-horology-border text-horology-steelMuted hover:border-horology-gold hover:text-white';
+        }
+
+        // 7. Injection du contenu de la rubrique active
+        if (stageDynamicBody && stageContentCard) {
+          if (animateCard) {
+            stageContentCard.classList.remove('stage-animate');
+            void stageContentCard.offsetWidth;
+            stageContentCard.classList.add('stage-animate');
+          }
+
+          stageDynamicBody.innerHTML = `
+            <div class="mb-5 pb-4 border-b border-horology-border/80">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-horology-gold/15 border border-horology-gold/40 font-mono text-xs font-semibold text-horology-gold">
+                  <span>${data.kicker}</span>
+                </span>
+                <span class="font-mono text-xs text-horology-steelMuted">Réserve : ${reservePercent}%</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mt-2">
+                ${data.title}
+              </h2>
+              <p class="text-xs sm:text-sm text-horology-steelMuted mt-1 leading-relaxed">
+                ${data.subtitle}
+              </p>
+            </div>
+            ${data.render()}
+          `;
+
+          bindDynamicStageEvents();
+        }
+      }
+
+      // =====================================================================
+      // 8. ÉCOUTEURS D'ÉVÉNEMENTS (BOUTONS, EN-TÊTE, CLAVIER & SWIPE TACTILE)
+      // =====================================================================
+      if (btnPrevHour) {
+        btnPrevHour.addEventListener('click', () => {
+          if (currentStep > 0) goToStep(currentStep - 1, true, 'counterclockwise');
+        });
+      }
+
+      if (btnNextHour) {
+        btnNextHour.addEventListener('click', () => {
+          if (currentStep < 11) {
+            goToStep(currentStep + 1, true, 'clockwise');
+          } else {
+            // À 11h, "Suivant · 12h →" fait tourner l'aiguille jusqu'à 12h et revient directement à 00h
+            goToStep(0, true, 'clockwise');
+          }
+        });
+      }
+
+      document.querySelectorAll('header .step-jump-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const target = parseInt(btn.getAttribute('data-goto-step'), 10);
+          if (!Number.isNaN(target)) goToStep(target);
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (lightboxState.open) {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            closeLightbox();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            lightboxNextBtn.click();
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            lightboxPrevBtn.click();
+          }
+          return;
+        }
+
+        if (e.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          if (currentStep < 11) {
+            goToStep(currentStep + 1, true, 'clockwise');
+          } else {
+            goToStep(0, true, 'clockwise');
+          }
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          if (currentStep > 0) goToStep(currentStep - 1, true, 'counterclockwise');
+        }
+      });
+
+      const stageWrapper = document.getElementById('interactive-stage-wrapper');
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      if (stageWrapper) {
+        stageWrapper.addEventListener('touchstart', (e) => {
+          if (e.changedTouches && e.changedTouches.length > 0) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+          }
+        }, { passive: true });
+
+        stageWrapper.addEventListener('touchend', (e) => {
+          if (!e.changedTouches || e.changedTouches.length === 0) return;
+          const deltaX = e.changedTouches[0].screenX - touchStartX;
+          const deltaY = e.changedTouches[0].screenY - touchStartY;
+
+          if (Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+            if (deltaX < 0) {
+              if (currentStep < 11) {
+                goToStep(currentStep + 1, true, 'clockwise');
+              } else {
+                goToStep(0, true, 'clockwise');
+              }
+            } else if (deltaX > 0 && currentStep > 0) {
+              goToStep(currentStep - 1, true, 'counterclockwise');
+            }
+          }
+        }, { passive: true });
+      }
+
+      // Affichage initial à 00h (Index 12)
+      goToStep(0);
+    });
+  </script>
+</body>
+</html>
